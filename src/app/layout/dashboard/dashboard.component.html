@@ -1,0 +1,74 @@
+<div [@routerTransition]>
+    <div class="row">
+        <div>
+            <h2 class="text-muted">Dashboard - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
+        </div>
+        <div class="ml-auto">
+            <h2 class="text-muted">{{totalTransmissao.totalLote}} / {{totalTransmissao.totalImagem}}</h2>
+        </div>
+    </div>  
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)" *ngFor="let alert of alerts">
+    {{ alert.message }}</ngb-alert>
+<!--     <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-bell fa-fw"></i> Ping
+                </div>
+                <app-ping></app-ping>
+            </div>
+        </div>
+    </div>
+ -->
+    <div class="row">
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Posição dos Lotes - {{gBarra.time | date:'yyyy/MM/dd HH:mm:ss'}}
+                </div>
+                <div class="card-block">
+                    <canvas baseChart height="130" [datasets]="gBarra.data" [labels]="gBarra.labels" [options]="gBarra.options" [legend]="gBarra.legend" [chartType]="gBarra.type">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+         <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Status Atual - {{timeLine.time | date:'yyyy/MM/dd HH:mm:ss'}}
+                </div>
+                <div class="card-block">
+                    <canvas baseChart height="130" [datasets]="timeLine.data" [labels]="timeLine.labels" [options]="timeLine.options" [colors]="timeLine.colors" [legend]="timeLine.legend" [chartType]="timeLine.type">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header {{ping.criticalCss}}">
+                    Status Server - {{ping.time | date:'yyyy/MM/dd HH:mm:ss'}}
+                </div>
+                <div class="card-block row">
+                    <div *ngFor="let mq of ping.data; let index = index" class="col-sm-4 d-block">
+                        <button (click)="redirectLog(mq.url)" class="btn btn-sm btn-ping {{mq.criticalCss}}" type="button" >{{mq.maq}} - {{mq.ms}}ms</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Desempenho img/min - {{desempenho.time | date:'yyyy/MM/dd HH:mm:ss'}}
+                </div>
+                <div class="card-block row" >
+                    <div class="col col-sm-6">
+                        <chart [options]="desempenho.subida" > </chart>
+                    </div>
+                    <div class="col col-sm-6">
+                        <chart [options]="desempenho.exportacao" > </chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
