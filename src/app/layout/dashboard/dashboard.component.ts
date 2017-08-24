@@ -12,6 +12,7 @@ import {DashboardService} from '../../service/dashboard-service';
 })
 export class DashboardComponent implements OnInit {
     public myDate = {time: new Date()};
+    public audioSirene = new Audio();
     public totalTransmissao = {time: new Date(),totalLote : 0,totalImagem: 0};
     public alerts: Array<any> = [];
     public ping: any = {data: []};
@@ -173,6 +174,8 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.audioSirene.src = "../../../assets/sounds/sirene.mp3";
+        this.audioSirene.load();
         this.utcTimeStart();
         this.resetGBarra();
         this.resetTimeLine();
@@ -241,8 +244,17 @@ export class DashboardComponent implements OnInit {
                 if(maxMs < v.ms)
                     maxMs = v.ms;
             };
+
             this.ping.criticalCss = 'card-' + this.defineButtonCritical(maxMs);
             this.ping.time = new Date(data.data[0].time);
+            if(this.defineButtonCritical(maxMs) == 'danger'){
+                this.audioSirene.load();
+                this.audioSirene.play();
+                 setTimeout(() => {
+                     this.audioSirene.pause();
+                    }, 1000 * 5);
+            }
+
         });
     }
 
@@ -260,12 +272,12 @@ export class DashboardComponent implements OnInit {
             this.desempenho.time = new Date(data.time);
             const clone = JSON.parse(JSON.stringify(this.desempenho.exportacao));
             clone.series[0].data[0]=parseInt(data.exportacao.total);
-            clone.yAxis.max = parseInt(data.exportacao.max)
+            clone.yAxis.max = 3000;
             clone.yAxis.title.text='Exportação max('+data.exportacao.max+')';
             this.desempenho.exportacao = clone;
             const clone2 = JSON.parse(JSON.stringify(this.desempenho.subida));
             clone2.series[0].data[0]=parseInt(data.subida.total);
-            clone2.yAxis.max = parseInt(data.subida.max)
+            clone2.yAxis.max = 3000;
             clone2.yAxis.title.text='Subida max('+data.subida.max+')';
             this.desempenho.subida = clone2;
         });
