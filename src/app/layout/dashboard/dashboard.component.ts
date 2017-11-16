@@ -286,7 +286,7 @@ export class DashboardComponent implements OnInit {
     private defineButtonCritical(ms: any){
         if(ms < 3000)
             return 'success';
-        if(ms < 10000)
+        if(ms < 30000)
             return 'warning';
         else
             return 'danger'
@@ -318,5 +318,9 @@ export class DashboardComponent implements OnInit {
         this.myDate.time = new Date();
     }
 
-     options : Object;
+    public showVersion(){
+        alert('0.10');
+    }
+    
+    options : Object;
 }
