@@ -235,19 +235,22 @@ export class DashboardComponent implements OnInit {
     public resetPing(){
         this.dashboardService.getPing().subscribe(data => {
             this.ping.data.length = 0;
-            var maxMs = 0;
+            var statusFinal = 0;
             for (var i in data.data) {
                 var v = data.data[i];
                 this.ping.data.push(v);
-                v.criticalCss = 'btn-' + this.defineButtonCritical(v.ms);
+                v.criticalCss = 'btn-' + this.defineButtonCritical(v.status);
                 v.url = this.defineLogsUrl(v);
-                if(maxMs < v.ms)
-                    maxMs = v.ms;
+                if(v.status == 1 && statusFinal == 0)
+                    statusFinal = v.status;
+                else if (v.status != 0 && v.status != 1)
+                    statusFinal = v.status;
             };
 
-            this.ping.criticalCss = 'card-' + this.defineButtonCritical(maxMs);
+            this.ping.criticalCss = 'card-' + this.defineButtonCritical(statusFinal);
             this.ping.time = new Date(data.data[0].time);
-            if(this.defineButtonCritical(maxMs) == 'danger'){
+            this.ping.status = statusFinal;
+            if(this.defineButtonCritical(statusFinal) == 'danger'){
                 this.audioSirene.load();
                 this.audioSirene.play();
                  setTimeout(() => {
@@ -283,10 +286,10 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    private defineButtonCritical(ms: any){
-        if(ms < 3000)
+    private defineButtonCritical(status: any){
+        if(status == 0)
             return 'success';
-        if(ms < 30000)
+        if(status == 1)
             return 'warning';
         else
             return 'danger'
@@ -300,6 +303,8 @@ export class DashboardComponent implements OnInit {
             url+='12380&t=50000';    
         else if(mq.maq.endsWith('_3'))
             url+='12480&t=50000';
+        else if(mq.maq.endsWith('CETAD'))
+            url+='12680&t=50000';
         return url;
     }
 

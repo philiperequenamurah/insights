@@ -46,7 +46,12 @@
         <div class="col col-sm-6">
             <div class="card mb-3">
                 <div class="card-header {{ping.criticalCss}}">
-                    Status Server - {{ping.time | date:'yyyy/MM/dd HH:mm:ss'}}
+                    <div style="float: left">
+                        Status Server - {{ping.time | date:'yyyy/MM/dd HH:mm:ss'}}
+                    </div>
+                    <div style="float: right;">
+                        {{ping.status}}
+                    </div>
                 </div>
                 <div class="card-block row">
                     <div *ngFor="let mq of ping.data; let index = index" class="col-sm-4 d-block">
