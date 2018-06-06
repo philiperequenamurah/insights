@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="card-block row">
-                    <div *ngFor="let mq of ping.data; let index = index" class="col-sm-4 d-block">
+                    <div *ngFor="let mq of ping.data; let index = index" class="col-sm-3 d-block">
                         <button (click)="redirectLog(mq.url)" class="btn btn-sm btn-ping {{mq.criticalCss}}" type="button" >{{mq.maq}} - {{mq.ms}}ms</button>
                     </div>
                 </div>

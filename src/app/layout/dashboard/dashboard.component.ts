@@ -238,6 +238,8 @@ export class DashboardComponent implements OnInit {
             var statusFinal = 0;
             for (var i in data.data) {
                 var v = data.data[i];
+                v.maq = v.maq.replace('Q511','');
+                v.maq = v.maq.replace('ETAD','');
                 this.ping.data.push(v);
                 v.criticalCss = 'btn-' + this.defineButtonCritical(v.status);
                 v.url = this.defineLogsUrl(v);
