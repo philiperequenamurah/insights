@@ -1,8 +1,59 @@
 <div [@routerTransition]>
-    <app-page-header [heading]="'Tables'" [icon]="'fa-table'"></app-page-header>
     <div class="row">
-        <div class="col col-xl-6 col-lg-12">
-            <div class="card mb-3">
+        <div  (click)="showVersion()">
+            <h2 class="text-muted">AudiXpress - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col col-xl-6 col-lg-6">
+            <div class="card mb-6">
+                <div class="card-header">Chamados GLPI {{glpi.time | date:'yyyy/MM/dd HH:mm:ss'}}</div>
+                <div class="card-block table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th *ngFor="let lb of glpi.labels; let index = index" >{{lb}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>{{glpi.data}}</tr> -->
+                        <tr *ngFor="let dd of glpi.data; let index = index">
+                            <td>{{dd.name}}</td>
+                            <td>{{dd.vencido}}</td>
+                            <td>{{dd.vincendo}}</td>
+                            <td>{{dd.avencer}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col col-xl-6 col-lg-6">
+            <div class="card mb-6">
+                <div class="card-header">Chamados MANTIS {{mantis.time | date:'yyyy/MM/dd HH:mm:ss'}}</div>
+                <div class="card-block table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th *ngFor="let lb of mantis.labels; let index = index" >{{lb}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>{{glpi.data}}</tr> -->
+                        <tr *ngFor="let dd of mantis.data; let index = index">
+                            <td>{{dd.name}}</td>
+                            <td>{{dd.crash}}</td>
+                            <td>{{dd.block}}</td>
+                            <td>{{dd.major}}</td>
+                            <td>{{dd.other}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+<!--             <div class="card mb-3">
                 <div class="card-header">
                     Basic example
                 </div>
@@ -98,46 +149,6 @@
                             <th scope="row">3</th>
                             <td>Larry</td>
                             <td>the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card mb-3">
-                <div class="card-header">Bordered table</div>
-                <div class="card-block table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@TwBootstrap</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td colspan="2">Larry the Bird</td>
                             <td>@twitter</td>
                         </tr>
                         </tbody>
@@ -349,6 +360,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+ -->
+         <!-- </div> -->
     </div>
 </div>

@@ -307,6 +307,8 @@ export class DashboardComponent implements OnInit {
             url+='12480&t=50000';
         else if(mq.maq.endsWith('_4'))
             url+='12830&t=50000';
+        else if(mq.maq.endsWith('_0'))
+            url+='12180&t=50000';
         else if(mq.maq.endsWith('CETAD'))
             url+='12680&t=50000';
         return url;
