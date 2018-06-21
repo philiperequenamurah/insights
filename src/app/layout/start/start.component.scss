@@ -1,0 +1,17 @@
+.card{
+	text-align: center;
+	height: 90vh;
+	position: relative;
+}
+
+.card:hover{
+	background-color: green;
+	cursor: pointer;
+	color: white;
+}
+
+.card-block{
+	margin: 25vh;
+	font-size: 20vh;
+	text-align: center;
+}

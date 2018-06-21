@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-grid',
@@ -8,6 +9,14 @@ import { routerTransition } from '../../router.animations';
     animations: [routerTransition()]
 })
 export class StartComponent implements OnInit {
-    constructor() { }
+    constructor(public router: Router) { }
     ngOnInit() { }
+
+    public redirectSictd(){
+        this.router.navigate(['/sictd']);
+    }
+
+    public redirectAX(){
+        this.router.navigate(['/audixpress']);
+    }
 }
