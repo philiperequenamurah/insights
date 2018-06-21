@@ -12,16 +12,16 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th *ngFor="let lb of glpi.labels; let index = index" >{{lb}}</th>
+                            <th class="text-center" *ngFor="let lb of glpi.labels; let index = index" >{{lb}}</th>
                         </tr>
                         </thead>
                         <tbody>
                             <!-- <tr>{{glpi.data}}</tr> -->
                         <tr *ngFor="let dd of glpi.data; let index = index">
                             <td>{{dd.name}}</td>
-                            <td>{{dd.vencido}}</td>
-                            <td>{{dd.vincendo}}</td>
-                            <td>{{dd.avencer}}</td>
+                            <td class="red text-center">{{dd.vencido}}</td>
+                            <td class="yellow text-center">{{dd.vincendo}}</td>
+                            <td class="green text-center">{{dd.avencer}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -35,17 +35,17 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th *ngFor="let lb of mantis.labels; let index = index" >{{lb}}</th>
+                            <th class="text-center" *ngFor="let lb of mantis.labels; let index = index" >{{lb}}</th>
                         </tr>
                         </thead>
                         <tbody>
                             <!-- <tr>{{glpi.data}}</tr> -->
                         <tr *ngFor="let dd of mantis.data; let index = index">
                             <td>{{dd.name}}</td>
-                            <td>{{dd.crash}}</td>
-                            <td>{{dd.block}}</td>
-                            <td>{{dd.major}}</td>
-                            <td>{{dd.other}}</td>
+                            <td class="text-center {{getCssMantis(dd.crash)}}">{{dd.crash}}</td>
+                            <td class="text-center {{getCssMantis(dd.block)}}" >{{dd.block}}</td>
+                            <td class="text-center {{getCssMantis(dd.manjor)}}">{{dd.major}}</td>
+                            <td class="text-center {{getCssMantis(dd.other)}}">{{dd.other}}</td>
                         </tr>
                         </tbody>
                     </table>

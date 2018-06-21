@@ -56,4 +56,7 @@ export class TablesComponent implements OnInit {
         this.myDate.time = new Date();
     }
 
+    public getCssMantis(qtd: any){
+        
+    }
 }
