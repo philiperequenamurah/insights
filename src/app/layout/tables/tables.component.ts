@@ -56,7 +56,9 @@ export class TablesComponent implements OnInit {
         this.myDate.time = new Date();
     }
 
-    public getCssMantis(qtd: any){
-        
+    public getCssMantis(qtd: any){}
+
+    public countMantis(dd: any){
+        return (+dd.crash) + (+dd.block) + (+dd.major) + (+dd.other);
     }
 }

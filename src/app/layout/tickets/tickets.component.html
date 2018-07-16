@@ -1,36 +1,54 @@
 <div [@routerTransition]>
     <div class="row">
         <div >
-            <h2 class="text-muted">AudiXpress - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
+            <h2 class="text-muted">AudiXpress 3 - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
         </div>
     </div>  
     <div class="row">
         <div class="col col-xl-6 col-lg-6">
             <div class="card mb-6">
-                <div class="card-header">Chamados GLPI {{glpi.time | date:'yyyy/MM/dd HH:mm:ss'}}</div>
+                <div class="card-header">Chamados {{lastTime.time | date:'yyyy/MM/dd HH:mm:ss'}}</div>
                 <div class="card-block table-responsive">
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th class="text-center" *ngFor="let lb of glpi.labels; let index = index" >{{lb}}</th>
+                            <th class="text-center"></th>
+                            <th class="text-center" colspan="4">GLPI</th>
+                            <th class="text-center" colspan="6">MANTIS</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Cliente</th>
+                            <th class="text-center">Vencido</th>
+                            <th class="text-center">Vincendo</th>
+                            <th class="text-center">A Vencer</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Crash</th>
+                            <th class="text-center">Block</th>
+                            <th class="text-center">Major</th>
+                            <th class="text-center">Others</th>
                             <th class="text-center">Total</th>
                         </tr>
                         </thead>
                         <tbody>
                             <!-- <tr>{{glpi.data}}</tr> -->
-                        <tr *ngFor="let dd of glpi.data; let index = index">
-                            <td>{{dd.name}}</td>
-                            <td class="red text-center">{{dd.vencido}}</td>
-                            <td class="yellow text-center">{{dd.vincendo}}</td>
-                            <td class="green text-center">{{dd.avencer}}</td>
-                            <td class="text-center">{{dd.avencer + dd.vincendo + dd.vencido}}</td>
+                        <tr *ngFor="let dd of listClient; let index = index">
+                            <td>{{dd.label}}</td>
+                            <td class="red text-center">{{dd.glpi.vencido}}</td>
+                            <td class="yellow text-center">{{dd.glpi.vincendo}}</td>
+                            <td class="green text-center">{{dd.glpi.avencer}}</td>
+                            <td class="text-center">{{dd.glpi.avencer + dd.glpi.vincendo + dd.glpi.vencido}}</td>
+                            <td class="text-center">{{dd.mantis.crash}}</td>
+                            <td class="text-center" >{{dd.mantis.block}}</td>
+                            <td class="text-center">{{dd.mantis.major}}</td>
+                            <td class="text-center">{{dd.mantis.other}}</td>
+                            <td class="text-center">{{countMantis(dd.mantis)}}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="col col-xl-6 col-lg-6">
+<!--         <div class="col col-xl-6 col-lg-6">
             <div class="card mb-6">
                 <div class="card-header">Chamados MANTIS {{mantis.time | date:'yyyy/MM/dd HH:mm:ss'}}</div>
                 <div class="card-block table-responsive">
@@ -42,8 +60,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr>{{glpi.data}}</tr> -->
-                        <tr *ngFor="let dd of mantis.data; let index = index">
+                             <tr>{{glpi.data}}</tr> -->
+     <!--                    <tr *ngFor="let dd of mantis.data; let index = index">
                             <td>{{dd.name}}</td>
                             <td class="text-center {{getCssMantis(dd.crash)}}">{{dd.crash}}</td>
                             <td class="text-center {{getCssMantis(dd.block)}}" >{{dd.block}}</td>
@@ -55,8 +73,8 @@
                     </table>
                 </div>
             </div>
-
-        </div>
+</div> 
+      -->   
 <!--             <div class="card mb-3">
                 <div class="card-header">
                     Basic example
