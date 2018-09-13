@@ -174,8 +174,8 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.audioSirene.src = "../../../assets/sounds/sirene.mp3";
-        this.audioSirene.load();
+        // this.audioSirene.src = "../../../assets/sounds/sirene.mp3";
+        // this.audioSirene.load();
         this.utcTimeStart();
         this.resetGBarra();
         this.resetTimeLine();

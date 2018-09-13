@@ -16,6 +16,10 @@ export class GlpiService {
 	    return this.getResponse('glpi');  
 	} 
 
+	getPorCliente(cliente) {  
+	    return this.getResponse('glpi/tickets?nomeentidade=' + cliente);  
+	} 
+
 	private getResponse(endPoint) {
 	    return this.http.get(this.url + endPoint)
       		.map(res => res.json());  

@@ -1,0 +1,28 @@
+<div [@routerTransition]>
+    <div class="row">
+        <div>
+            <h2 class="text-muted"><a [routerLink]="['/audixpress']" class="fa fa-arrow-left"> </a>{{cliente}} - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card mb-6">
+                <div class="card-header">Chamados {{chamados.time | date:'yyyy/MM/dd HH:mm:ss'}}</div>
+                <div class="card-block table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="text-center" *ngFor="let lb of chamados.labels; let index = index" >{{lb}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let dd of chamados.data; let index = index">
+                            <td *ngFor="let vl of chamados.labels; let sindex = index" class="{{getCssGLPI(sindex,dd)}}">{{formatar(vl,dd[vl])}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

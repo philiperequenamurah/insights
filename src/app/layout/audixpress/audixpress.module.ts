@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { TicketsComponent } from './tickets.component';
-import { TicketsRoutingModule } from './tickets-routing.module';
+import { AudixpressComponent } from './audixpress.component';
+import { AudixpressRoutingModule } from './audixpress-routing.module';
 import { PageHeaderModule } from './../../shared';
 
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 
-import {DashboardAudiService} from '../../service/dashboard-audi-service';  
+import {GlpiService} from '../../service/glpi/glpi-service';  
+import {MantisService} from '../../service//mantis/mantis-service';  
 
  declare var require: any;
 
@@ -24,16 +25,17 @@ import {DashboardAudiService} from '../../service/dashboard-audi-service';
 @NgModule({
     imports: [
         CommonModule,
-        TicketsRoutingModule,
+        AudixpressRoutingModule,
         PageHeaderModule
     ],
-    declarations: [TicketsComponent],
+    declarations: [AudixpressComponent],
     providers: [  
     {
           provide: HighchartsStatic,
           useFactory: highchartsFactory
         },
-        DashboardAudiService
+        GlpiService,
+        MantisService
     ]
 })
-export class TicketsModule { }
+export class AudixpressModule { }

@@ -1,21 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 
-import {DashboardAudiService} from '../../service/dashboard-audi-service';  
+import {GlpiService} from '../../service/glpi/glpi-service';  
+import {MantisService} from '../../service/mantis/mantis-service';  
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-    selector: 'app-tables',
-    templateUrl: './tickets.component.html',
-    styleUrls: ['./tickets.component.scss'],
+    selector: 'app-audixpress',
+    templateUrl: './audixpress.component.html',
+    styleUrls: ['./audixpress.component.scss'],
     animations: [routerTransition()]
 })
-export class TicketsComponent implements OnInit {
+export class AudixpressComponent implements OnInit {
     public myDate = {time: new Date()};
-    public lastTime = {time: 'Última Data'};
+    public lastTime = {time: new Date()};
     
     public listClient: Array<any> = [];
 
-    constructor(private dashboardAudiService: DashboardAudiService) { }
+    constructor(private glpiService: GlpiService, private mantisService: MantisService,  private route: ActivatedRoute,
+    private router: Router) { }
 
     ngOnInit() { 
         this.resetGlpi();
@@ -30,7 +33,7 @@ export class TicketsComponent implements OnInit {
 	}
 
     public resetGlpi(){
-        this.dashboardAudiService.getGlpi().subscribe(data => {
+        this.glpiService.getGlpi().subscribe(data => {
         	this.montarData('glpi',data);
         });
     }
@@ -71,7 +74,7 @@ export class TicketsComponent implements OnInit {
     }
 
     public resetMantis(){
-        this.dashboardAudiService.getMantis().subscribe(data => {
+        this.mantisService.getMantis().subscribe(data => {
            this.montarData('mantis',data);
         });
     }
@@ -85,4 +88,15 @@ export class TicketsComponent implements OnInit {
     public countMantis(dd: any){
         return (+dd.crash) + (+dd.block) + (+dd.major) + (+dd.other);
     }
+    public getCssGLPI(glpi: any){
+        if(glpi.vencido > 0)
+            return 'red';
+        if(glpi.vincendo > 0)
+            return 'yellow';
+        return 'green';
+    }
+    
+    public chamados(cliente:any){
+        this.router.navigate(['/chamados'], { queryParams: { 'cliente': cliente } });
+    }    
 }

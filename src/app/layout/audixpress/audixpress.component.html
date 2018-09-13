@@ -1,0 +1,52 @@
+<div [@routerTransition]>
+    <div class="row">
+        <div>
+            <h2 class="text-muted">AudiXpress 3 - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col col-xl-6 col-lg-6">
+            <div class="card mb-6">
+                <!-- <div class="card-header">Chamados {{lastTime.time | date:'yyyy/MM/dd HH:mm:ss'}}</div> -->
+                <div class="card-block table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="text-center"></th>
+                            <th class="text-center" colspan="4">GLPI</th>
+                            <th class="text-center" colspan="6">MANTIS</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Cliente</th>
+                            <th class="text-center">Vencido</th>
+                            <th class="text-center">Vincendo</th>
+                            <th class="text-center">A Vencer</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Crash</th>
+                            <th class="text-center">Block</th>
+                            <th class="text-center">Major</th>
+                            <th class="text-center">Others</th>
+                            <th class="text-center">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>{{glpi.data}}</tr> -->
+                        <tr *ngFor="let dd of listClient; let index = index">
+                            <td class="{{getCssGLPI(dd.glpi)}}" (click)="chamados(dd.label)">{{dd.label}}</td>
+                            <td class="{{dd.glpi.vencido == 0? '' : 'red'}} text-center">{{dd.glpi.vencido}}</td>
+                            <td class="{{dd.glpi.vincendo == 0? '' : 'yellow'}} text-center">{{dd.glpi.vincendo}}</td>
+                            <td class="{{dd.glpi.avencer == 0? '' : 'green'}} text-center">{{dd.glpi.avencer}}</td>
+                            <td class="text-center">{{dd.glpi.avencer + dd.glpi.vincendo + dd.glpi.vencido}}</td>
+                            <td class="text-center">{{dd.mantis.crash}}</td>
+                            <td class="text-center" >{{dd.mantis.block}}</td>
+                            <td class="text-center">{{dd.mantis.major}}</td>
+                            <td class="text-center">{{dd.mantis.other}}</td>
+                            <td class="text-center">{{countMantis(dd.mantis)}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
