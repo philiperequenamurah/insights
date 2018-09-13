@@ -16,7 +16,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let dd of chamados.data; let index = index">
+                        <tr *ngFor="let dd of chamados.data; let index = index" (click)="openGLPI(dd)" class="link">
                             <td *ngFor="let vl of chamados.labels; let sindex = index" class="{{getCssGLPI(sindex,dd)}}">{{formatar(vl,dd[vl])}}</td>
                         </tr>
                         </tbody>

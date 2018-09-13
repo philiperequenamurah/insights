@@ -1,7 +1,7 @@
 <div [@routerTransition]>
     <div class="row">
         <div>
-            <h2 class="text-muted">AudiXpress 3 - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
+            <h2 class="text-muted">AudiXpress - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
         </div>
     </div>  
     <div class="row">
@@ -31,8 +31,8 @@
                         </thead>
                         <tbody>
                             <!-- <tr>{{glpi.data}}</tr> -->
-                        <tr *ngFor="let dd of listClient; let index = index">
-                            <td class="{{getCssGLPI(dd.glpi)}}" (click)="chamados(dd.label)">{{dd.label}}</td>
+                        <tr *ngFor="let dd of listClient; let index = index" class="link" (click)="chamados(dd.label)">
+                            <td class="{{getCssGLPI(dd.glpi)}}">{{dd.label}}</td>
                             <td class="{{dd.glpi.vencido == 0? '' : 'red'}} text-center">{{dd.glpi.vencido}}</td>
                             <td class="{{dd.glpi.vincendo == 0? '' : 'yellow'}} text-center">{{dd.glpi.vincendo}}</td>
                             <td class="{{dd.glpi.avencer == 0? '' : 'green'}} text-center">{{dd.glpi.avencer}}</td>
