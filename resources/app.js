@@ -87,7 +87,7 @@ var corsOptionsDelegate = function (req, callback) {
     con.connect(function (err) {
       if (err) console.log(err)
 
-      var query = "select e.name, sum(case when t.due_date < now() then 1 else 0 end) vencido,  sum(case when t.due_date between now() and date_add(now(), interval 7 day) then 1 else 0 end) vincendo, sum(case when t.due_date > date_add(now(), interval 7 day) then 1 else 0 end) avencer,  sum(case when t.due_date is null then 1 else 0 end) semdata from glpi_tickets t   join glpi_entities e on e.id = t.entities_id and e.entities_id = 26  where";
+      var query = "select e.name, sum(case when t.due_date < now() then 1 else 0 end) vencido,  sum(case when t.due_date between now() and date_add(now(), interval 5 day) then 1 else 0 end) vincendo, sum(case when t.due_date > date_add(now(), interval 7 day) then 1 else 0 end) avencer,  sum(case when t.due_date is null then 1 else 0 end) semdata from glpi_tickets t   join glpi_entities e on e.id = t.entities_id and e.entities_id = 26  where";
 
       if(req.query.pendente != 'true')
          query += " t.status <> 4 and ";
