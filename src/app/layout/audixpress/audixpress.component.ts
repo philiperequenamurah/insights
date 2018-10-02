@@ -51,6 +51,11 @@ export class AudixpressComponent implements OnInit {
         if(client === null){
             client = {"label" : label, glpi : {avencer:0,vincendo:0,vencido:0}, mantis: {block:0,crash:0,major:0,other:0} };
             this.listClient.push(client);
+
+            this.listClient.sort((a, b) => {
+                return a.label.localeCompare(b.label);
+            });
+
         }
         return client;
     }
@@ -72,6 +77,7 @@ export class AudixpressComponent implements OnInit {
             }
         }
         this.lastTime.time = data.time;
+
     }
 
     public resetMantis(){
