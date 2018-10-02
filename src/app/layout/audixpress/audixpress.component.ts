@@ -17,6 +17,8 @@ export class AudixpressComponent implements OnInit {
     
     public listClient: Array<any> = [];
 
+    private opcoes = {requisicao:true,incidente:true,pendente:false};
+
     constructor(private glpiService: GlpiService, private mantisService: MantisService,  private route: ActivatedRoute,
     private router: Router) { }
 
@@ -33,7 +35,7 @@ export class AudixpressComponent implements OnInit {
 	}
 
     public resetGlpi(){
-        this.glpiService.getGlpi().subscribe(data => {
+        this.glpiService.getGlpiOptions(this.opcoes).subscribe(data => {
         	this.montarData('glpi',data);
         });
     }
@@ -70,7 +72,6 @@ export class AudixpressComponent implements OnInit {
             }
         }
         this.lastTime.time = data.time;
-        console.log(this.listClient);
     }
 
     public resetMantis(){
@@ -99,4 +100,13 @@ export class AudixpressComponent implements OnInit {
     public chamados(cliente:any){
         this.router.navigate(['/chamados'], { queryParams: { 'cliente': cliente } });
     }    
+
+    public selectGLPI(op: any){
+        this.opcoes[op] = !this.opcoes[op];
+        this.resetGlpi();
+    }
+
+    public getGLPIOption(op: any){
+        return this.opcoes[op];
+    }
 }

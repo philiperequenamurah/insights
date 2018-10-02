@@ -13,6 +13,13 @@
                         <thead>
                         <tr>
                             <th class="text-center"></th>
+                            <th class="text-center op {{getGLPIOption('requisicao') ? 'op-sel' : ''}}" (click)="selectGLPI('requisicao');">Requisição</th>
+                            <th class="text-center op {{getGLPIOption('incidente') ? 'op-sel' : ''}}" (click)="selectGLPI('incidente');">Incidente</th>
+                            <th class="text-center op {{getGLPIOption('pendente') ? 'op-sel' : ''}}" (click)="selectGLPI('pendente');">Pendentes</th>
+                            <th class="text-center"></th>
+                        </tr>
+                        <tr>
+                            <th class="text-center"></th>
                             <th class="text-center" colspan="4">GLPI</th>
                             <th class="text-center" colspan="6">MANTIS</th>
                         </tr>
@@ -30,7 +37,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr>{{glpi.data}}</tr> -->
                         <tr *ngFor="let dd of listClient; let index = index" class="link" (click)="chamados(dd.label)">
                             <td class="{{getCssGLPI(dd.glpi)}}">{{dd.label}}</td>
                             <td class="{{dd.glpi.vencido == 0? '' : 'red'}} text-center">{{dd.glpi.vencido}}</td>

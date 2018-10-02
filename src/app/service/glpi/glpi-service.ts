@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -14,6 +14,17 @@ export class GlpiService {
 
 	getGlpi() {  
 	    return this.getResponse('glpi');  
+	} 
+
+	getGlpiOptions(op: any) {  
+		  let search: URLSearchParams = new URLSearchParams();
+		  let opProps = Object.keys(op);
+		  for (var prop in opProps) {
+		  	var label = opProps[prop];
+		  	search.set(label,op[label]);
+		  }
+		  return this.http.get(this.url + 'glpi', new RequestOptions({ "search":search}))
+      		.map(res => res.json());  
 	} 
 
 	getPorCliente(cliente) {  
