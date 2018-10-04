@@ -12,13 +12,11 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th class="text-center"></th>
                                 <th class="text-center op {{getGLPIOption('requisicao') ? 'op-sel' : ''}}" (click)="selectGLPI('requisicao');">Requisição</th>
                                 <th class="text-center op {{getGLPIOption('incidente') ? 'op-sel' : ''}}" (click)="selectGLPI('incidente');">Incidente</th>
                                 <th class="text-center op {{getGLPIOption('processando') ? 'op-sel' : ''}}" (click)="selectGLPI('processando');">Processando</th>
                                 <th class="text-center op {{getGLPIOption('pendente') ? 'op-sel' : ''}}" (click)="selectGLPI('pendente');">Pendentes</th>
                                 <th class="text-center op {{getGLPIOption('solucionado') ? 'op-sel' : ''}}" (click)="selectGLPI('solucionado');">Solucionados</th>
-                                <th class="text-center"></th>
                             </tr>
                         </thead>
                     </table>
@@ -26,8 +24,8 @@
                         <thead>
                         <tr>
                             <th class="text-center"></th>
-                            <th class="text-center" colspan="4">GLPI</th>
-                            <th class="text-center" colspan="6">MANTIS</th>
+                            <th class="text-center link" colspan="4" (click)="chamados('')">GLPI({{contarTotalGlpi()}})</th>
+                            <th class="text-center" colspan="6">MANTIS({{contarTotalMantis()}})</th>
                         </tr>
                         <tr>
                             <th class="text-center">Cliente</th>

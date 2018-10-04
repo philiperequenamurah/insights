@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AudixpressComponent implements OnInit {
     public myDate = {time: new Date()};
     public lastTime = {time: new Date()};
-    
+    private sortBy = "label";
     public listClient: Array<any> = [];
 
     private opcoes = {requisicao:true,incidente:true,pendente:false, solucionado: false, processando: true, nomeentidade: ""};
@@ -36,6 +36,7 @@ export class AudixpressComponent implements OnInit {
 
     public resetGlpi(){
         this.glpiService.getGlpi(this.opcoes).subscribe(data => {
+            console.log(data);
         	this.montarData('glpi',data);
         });
     }
@@ -51,11 +52,7 @@ export class AudixpressComponent implements OnInit {
         if(client === null){
             client = {"label" : label, glpi : {avencer:0,vincendo:0,vencido:0}, mantis: {block:0,crash:0,major:0,other:0} };
             this.listClient.push(client);
-
-            this.listClient.sort((a, b) => {
-                return a.label.localeCompare(b.label);
-            });
-
+            this.ordenar();
         }
         return client;
     }
@@ -103,6 +100,25 @@ export class AudixpressComponent implements OnInit {
         return 'green';
     }
     
+    public contarTotalGlpi(){
+        let total = 0;
+        this.listClient.forEach(function(value){
+            let dd = value;
+            total = total + dd.glpi.avencer + dd.glpi.vincendo + dd.glpi.vencido;
+        })
+        return total;
+    }
+
+
+    public contarTotalMantis(){
+        let total = 0;
+        this.listClient.forEach(function(value){
+            let dd = value.mantis;
+            total = total + (+dd.crash) + (+dd.block) + (+dd.major) + (+dd.other);
+        })
+        return total;
+    }
+
     public chamados(cliente:any){
         this.router.navigate(['/chamados'], { queryParams: { 'cliente': cliente, 'opcoes' : JSON.stringify(this.opcoes) } });
     }    
@@ -115,4 +131,13 @@ export class AudixpressComponent implements OnInit {
     public getGLPIOption(op: any){
         return this.opcoes[op];
     }
+
+    public ordenar(){
+        this.listClient.sort((a,b)=>{
+            if (a[this.sortBy] < b[this.sortBy]) return -1;
+            else if (a[this.sortBy] > b[this.sortBy]) return 1;
+            else return 0;
+        })
+    }
+
 }

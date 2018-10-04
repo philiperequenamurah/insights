@@ -16,6 +16,8 @@ export class ChamadosComponent implements OnInit {
     public myDate = {time: new Date()};
     public chamados: any = {labels: [],data: []};
     public cliente: any;
+    public sortBy = "Numero";
+    public sortDefault = "Numero";
     private opcoes = {requisicao:true,incidente:true,pendente:false, solucionado: false, nomeentidade: "", processando: true};
 
     constructor(private glpiService: GlpiService,private mantisService: MantisService,  private route: ActivatedRoute,
@@ -32,10 +34,10 @@ export class ChamadosComponent implements OnInit {
 
          this.resetGlpi();
         // this.resetMantis();
-        // setInterval(() => {
-	       //  this.resetGlpi();
+        setInterval(() => {
+	       this.resetGlpi();
 	       //  this.resetMantis();
-        // }, 1000 * 60);
+        }, 1000 * 60);
         setInterval(() => {
            this.utcTimeStart();
         },1000);
@@ -59,7 +61,7 @@ export class ChamadosComponent implements OnInit {
                 origem.data.push(data.data[i]);
             }
             origem.time = data.time
-
+            this.ordenar(null);
     }
 
     public utcTimeStart() {
@@ -97,4 +99,17 @@ export class ChamadosComponent implements OnInit {
         return this.opcoes[op];
     }
 
+    public ordenar(coluna){
+        if(coluna)
+            this.sortBy = coluna;
+        this.chamados.data.sort((a,b)=>{
+            if (a[this.sortBy] < b[this.sortBy]) return -1;
+            else if (a[this.sortBy] > b[this.sortBy]) return 1;
+            else {
+                if (a[this.sortDefault] < b[this.sortDefault]) return -1;
+                else if (a[this.sortDefault] > b[this.sortDefault]) return 1;
+                else return 0;
+            };
+        })
+    }
 }

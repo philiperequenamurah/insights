@@ -87,7 +87,7 @@ var corsOptionsDelegate = function (req, callback) {
     con.connect(function (err) {
       if (err) console.log(err)
 
-      var query = "select e.name, sum(case when t.due_date < now() then 1 else 0 end) vencido,  sum(case when t.due_date between now() and date_add(now(), interval 5 day) then 1 else 0 end) vincendo, sum(case when t.due_date > date_add(now(), interval 7 day) then 1 else 0 end) avencer,  sum(case when t.due_date is null then 1 else 0 end) semdata from glpi_tickets t   join glpi_entities e on e.id = t.entities_id and e.entities_id = 26  where";
+      var query = "select t.nomeentidade as name, sum(case when t.datavencimento < now() then 1 else 0 end) vencido,  sum(case when t.datavencimento between now() and date_add(now(), interval 5 day) then 1 else 0 end) vincendo, sum(case when t.datavencimento > date_add(now(), interval 5 day) or t.datavencimento is null then 1 else 0 end) avencer  from glpi.dashboardtickets t where";
 
       if(req.query.pendente != 'true')
          query += " t.status <> 4 and ";
@@ -104,15 +104,16 @@ var corsOptionsDelegate = function (req, callback) {
       if(req.query.requisicao == 'false')
          query += " t.type <> 2 and ";
       
-      query += " t.is_deleted is false and t.status <> 6 group by e.name order by e.name"; 
+      query += " t.status <> 6 group by t.nomeentidade order by t.nomeentidade"; 
 
       var lbs = ["Cliente","Vencido", "Vincendo","A Vencer"];
 
+console.log(query);
        con.query(query, function (err, result, fields) {
         if (err) {
           console.log(err)
         }
-
+console.log(result);
         var retorno = {labels:[],data:[],time:''};
         retorno.labels = lbs;
 
