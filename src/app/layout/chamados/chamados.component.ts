@@ -16,6 +16,7 @@ export class ChamadosComponent implements OnInit {
     public myDate = {time: new Date()};
     public chamados: any = {labels: [],data: []};
     public cliente: any;
+    private opcoes = {requisicao:true,incidente:true,pendente:false, solucionado: false, nomeentidade: "", processando: true};
 
     constructor(private glpiService: GlpiService,private mantisService: MantisService,  private route: ActivatedRoute,
     private router: Router) { }
@@ -24,16 +25,12 @@ export class ChamadosComponent implements OnInit {
               .queryParams
               .subscribe(params => {
                 // Defaults to 0 if no query param provided.
+                if(params['opcoes'])
+                    this.opcoes = JSON.parse(params['opcoes']);
                 this.cliente = params['cliente'];
-                console.log(this.cliente);
          });
 
-         console.log(this.cliente);
-        this.glpiService.getPorCliente(this.cliente).subscribe(data => {
-            this.montarData(this.chamados,data);
-            console.log(this.chamados);
-        });
-        // this.resetGlpi();
+         this.resetGlpi();
         // this.resetMantis();
         // setInterval(() => {
 	       //  this.resetGlpi();
@@ -44,6 +41,13 @@ export class ChamadosComponent implements OnInit {
         },1000);
 	}
 
+    private resetGlpi(){
+        console.log(this.opcoes);
+        this.opcoes.nomeentidade = this.cliente;
+        this.glpiService.getPorCliente(this.opcoes).subscribe(data => {
+            this.montarData(this.chamados,data);
+        });
+    }
 
     private montarData(origem: any, data: any){
             origem.data.length = 0;
@@ -55,7 +59,6 @@ export class ChamadosComponent implements OnInit {
                 origem.data.push(data.data[i]);
             }
             origem.time = data.time
-            console.log(origem);
 
     }
 
@@ -84,4 +87,14 @@ export class ChamadosComponent implements OnInit {
     public openGLPI(obj:any){
         window.open('http://suporte.murah.com.br/front/ticket.form.php?id=' + obj.Numero, '_blank');
     }
+
+    public selectGLPI(op: any){
+        this.opcoes[op] = !this.opcoes[op];
+        this.resetGlpi();
+    }
+
+    public getGLPIOption(op: any){
+        return this.opcoes[op];
+    }
+
 }

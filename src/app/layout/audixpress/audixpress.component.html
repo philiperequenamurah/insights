@@ -1,7 +1,7 @@
 <div [@routerTransition]>
     <div class="row">
         <div>
-            <h2 class="text-muted">AudiXpress - {{myDate.time | date:'yyyy/MM/dd HH:mm:ss'}}</h2>
+            <h2 class="text-muted">AudiXpress - {{myDate.time | date:'yyyy-MM-dd HH:mm:ss'}}</h2>
         </div>
     </div>  
     <div class="row">
@@ -12,11 +12,15 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th class="text-center"></th>
-                            <th class="text-center op {{getGLPIOption('requisicao') ? 'op-sel' : ''}}" (click)="selectGLPI('requisicao');">Requisição</th>
-                            <th class="text-center op {{getGLPIOption('incidente') ? 'op-sel' : ''}}" (click)="selectGLPI('incidente');">Incidente</th>
+                            <th class="no-border no-padding no-margin">
+                                <div class="text-center op {{getGLPIOption('requisicao') ? 'op-sel' : ''}}" (click)="selectGLPI('requisicao');">Requisição</div>
+                                <div class="text-center op {{getGLPIOption('incidente') ? 'op-sel' : ''}}" (click)="selectGLPI('incidente');">Incidente</div>
+                            </th>
+                            <th class="text-center op {{getGLPIOption('processando') ? 'op-sel' : ''}}" (click)="selectGLPI('processando');">Processando</th>
                             <th class="text-center op {{getGLPIOption('pendente') ? 'op-sel' : ''}}" (click)="selectGLPI('pendente');">Pendentes</th>
-                            <th class="text-center"></th>
+                            <th class="text-center op {{getGLPIOption('solucionado') ? 'op-sel' : ''}}" (click)="selectGLPI('solucionado');">Solucionados</th>
+                            <th class="text-center op">
+                            </th>
                         </tr>
                         <tr>
                             <th class="text-center"></th>

@@ -92,16 +92,21 @@ var corsOptionsDelegate = function (req, callback) {
       if(req.query.pendente != 'true')
          query += " t.status <> 4 and ";
 
+      if(req.query.solucionado != 'true')
+         query += " t.status <> 5 and ";
+
+      if(req.query.processando == 'false')
+         query += " t.status not in (1,2,3) and ";
+
       if(req.query.incidente == 'false')
-         query += " t.type <> 1 and "
+         query += " t.type <> 1 and ";
 
       if(req.query.requisicao == 'false')
-         query += " t.type <> 2 and "
+         query += " t.type <> 2 and ";
       
-      query += " t.solveDate is null and t.is_deleted is false group by e.name order by e.name"; 
+      query += " t.is_deleted is false and t.status <> 6 group by e.name order by e.name"; 
 
       var lbs = ["Cliente","Vencido", "Vincendo","A Vencer"];
-
 
        con.query(query, function (err, result, fields) {
         if (err) {
@@ -131,16 +136,30 @@ var corsOptionsDelegate = function (req, callback) {
     con.connect(function (err) {
       if (err) console.log(err)
 
-      var query = "SELECT numero as Numero,titulo as Titulo,typelabel as Tipo,datacriacao as Criacao,datavencimento as Vencimento ,nomeentidade as Cliente,status_name as Status,locations_name as Localizacao,grupoatribuido as Grupo,attr_user as Atribuido FROM glpi.dashboardtickets "; 
+      var query = "SELECT numero as Numero,titulo as Titulo,typelabel as Tipo,datacriacao as Criacao,datavencimento as Vencimento ,nomeentidade as Cliente,status_name as Status,locations_name as Localizacao,grupoatribuido as Grupo,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
       
-      if(req.query.nomeentidade)
-          query += " where nomeentidade like '" + req.query.nomeentidade + "'";
+      if(req.query.pendente != 'true')
+         query += " t.status <> 4 and ";
 
-      query += " order by numero ";
+      if(req.query.solucionado != 'true')
+         query += " t.status <> 5 and ";
+
+      if(req.query.processando == 'false')
+         query += " t.status not in (1,2,3) and ";
+
+      if(req.query.incidente == 'false')
+         query += " t.type <> 1 and ";
+
+      if(req.query.requisicao == 'false')
+         query += " t.type <> 2 and ";
+
+      if(req.query.nomeentidade)
+          query += " nomeentidade like '" + req.query.nomeentidade + "' and ";
+
+      query += " 1 = 1 order by numero ";
       
       var lbs = ["Numero","Titulo","Tipo", 
       "Criacao", "Vencimento","Cliente","Status","Localizacao","Grupo", "Atribuido"];
-
 
        con.query(query, function (err, result, fields) {
         if (err) {

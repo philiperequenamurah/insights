@@ -12,27 +12,27 @@ export class GlpiService {
 
     constructor(private http: Http) {}
 
-	getGlpi() {  
-	    return this.getResponse('glpi');  
+	getGlpi(op: any) {  
+		return this.getResponse('glpi',op);
 	} 
 
-	getGlpiOptions(op: any) {  
+	getPorCliente(op: any) {  
+		return this.getResponse('glpi/tickets',op);
+	} 
+
+	private getResponse(endPoint, params) {
+		if(params == null)
+		    return this.http.get(this.url + endPoint)
+	      		.map(res => res.json());  
+	    else {
 		  let search: URLSearchParams = new URLSearchParams();
-		  let opProps = Object.keys(op);
+		  let opProps = Object.keys(params);
 		  for (var prop in opProps) {
 		  	var label = opProps[prop];
-		  	search.set(label,op[label]);
+		  	search.set(label,params[label]);
 		  }
-		  return this.http.get(this.url + 'glpi', new RequestOptions({ "search":search}))
+		  return this.http.get(this.url + endPoint, new RequestOptions({ "search":search}))
       		.map(res => res.json());  
-	} 
-
-	getPorCliente(cliente) {  
-	    return this.getResponse('glpi/tickets?nomeentidade=' + cliente);  
-	} 
-
-	private getResponse(endPoint) {
-	    return this.http.get(this.url + endPoint)
-      		.map(res => res.json());  
+	    }
 	}
 }  
