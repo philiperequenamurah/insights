@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { GlpiService } from '../../../service/glpi/glpi-service';  
+import {EventEmitterService} from '../../../service/emitter/event-emmiter-service';  
 
 @Component({
     selector: 'app-header',
@@ -9,15 +11,39 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class HeaderComponent implements OnInit {
 
-    constructor(private translate: TranslateService, public router: Router) {
+    public myDate = {time: new Date()};
+    public listGrupo = {data : []};
+    public grupoSelecionado = {id: 0, name:'Filtrar Grupo'};
+    constructor(private translate: TranslateService, public router: Router, private glpiService: GlpiService) {
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd && window.innerWidth <= 992) {
                 this.toggleSidebar();
             }
         });
+
+        this.glpiService.getGrupos({}).subscribe(data => {
+            var opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
+            this.listGrupo.data = [];
+            if(opcoes['grupo'])
+                this.grupoSelecionado.name = opcoes['grupo'];
+
+            this.listGrupo.data.push({id:0,name:'Todos'});
+            for (var i in data.data) {
+                this.listGrupo.data.push(data.data[i]);
+            }
+        });
     }
 
-    ngOnInit() {}
+    public utcTimeStart() {
+        this.myDate.time = new Date();
+    }
+
+    ngOnInit() {
+        setInterval(() => {
+           this.utcTimeStart();
+        },1000);
+
+    }
 
     toggleSidebar() {
         const dom: any = document.querySelector('body');
@@ -35,5 +61,22 @@ export class HeaderComponent implements OnInit {
 
     changeLang(language: string) {
         this.translate.use(language);
+    }
+
+    public selecionarGrupo(ob:any){
+        var opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
+
+        if(ob.id == 0){
+            this.grupoSelecionado = {id: 0, name:'Filtrar Grupo'};
+            opcoes['grupo'] = null;
+        }
+        else{
+            this.grupoSelecionado = ob;
+            opcoes['grupo'] = this.grupoSelecionado.name;
+        }
+
+        localStorage.setItem('glpiOptions',JSON.stringify(opcoes));
+
+        EventEmitterService.get('glpi').emit('emitĺerolero');
     }
 }

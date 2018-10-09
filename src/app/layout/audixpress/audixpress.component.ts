@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 
 import {GlpiService} from '../../service/glpi/glpi-service';  
+import {EventEmitterService} from '../../service/emitter/event-emmiter-service';  
 import {MantisService} from '../../service/mantis/mantis-service';  
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -23,8 +24,10 @@ export class AudixpressComponent implements OnInit {
     private router: Router) { }
 
     ngOnInit() { 
+        this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
         this.resetGlpi();
         this.resetMantis();
+        EventEmitterService.get('glpi').subscribe(data => this.resetGlpi());
         setInterval(() => {
 	        this.resetGlpi();
 	        this.resetMantis();
@@ -35,8 +38,8 @@ export class AudixpressComponent implements OnInit {
 	}
 
     public resetGlpi(){
+        this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
         this.glpiService.getGlpi(this.opcoes).subscribe(data => {
-            console.log(data);
         	this.montarData('glpi',data);
         });
     }
@@ -120,11 +123,12 @@ export class AudixpressComponent implements OnInit {
     }
 
     public chamados(cliente:any){
-        this.router.navigate(['/chamados'], { queryParams: { 'cliente': cliente, 'opcoes' : JSON.stringify(this.opcoes) } });
+        this.router.navigate(['/chamados'], { queryParams: { 'cliente': cliente} });
     }    
 
     public selectGLPI(op: any){
         this.opcoes[op] = !this.opcoes[op];
+        localStorage.setItem('glpiOptions',JSON.stringify(this.opcoes));
         this.resetGlpi();
     }
 

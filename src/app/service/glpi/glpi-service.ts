@@ -20,6 +20,10 @@ export class GlpiService {
 		return this.getResponse('glpi/tickets',op);
 	} 
 
+	getGrupos(op: any) {  
+		return this.getResponse('glpi/groups',op);
+	} 
+
 	private getResponse(endPoint, params) {
 		if(params == null)
 		    return this.http.get(this.url + endPoint)

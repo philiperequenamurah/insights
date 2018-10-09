@@ -101,6 +101,9 @@ var corsOptionsDelegate = function (req, callback) {
       if(req.query.incidente == 'false')
          query += " t.type <> 1 and ";
 
+      if(req.query.grupo)
+         query += " t.grupoatribuido like '%" + req.query.grupo + "%' and ";
+
       if(req.query.requisicao == 'false')
          query += " t.type <> 2 and ";
       
@@ -154,6 +157,9 @@ console.log(result);
       if(req.query.requisicao == 'false')
          query += " t.type <> 2 and ";
 
+      if(req.query.grupo)
+         query += " t.grupoatribuido like '%" + req.query.grupo + "%' and ";
+
       if(req.query.nomeentidade)
           query += " nomeentidade like '" + req.query.nomeentidade + "' and ";
 
@@ -167,6 +173,37 @@ console.log(result);
           console.log(err)
         }
 
+        var retorno = {labels:[],data:[],time:''};
+        retorno.labels = lbs;
+
+        for (var i = 0; i < result.length; i++) {
+          var v = result[i];
+          retorno.data.push(v);
+        };
+        retorno.time = new Date();
+        con.end();
+        res.setHeader('Content-Type', 'application/json');
+        res.write(JSON.stringify(retorno));
+        res.end();
+      });
+    });
+  });
+
+ app.get('/glpi/groups', cors(corsOptionsDelegate), function (req, res) {
+    var myClient;
+    var retorno = {}
+    var con = mysql.createConnection(myConfig);
+    con.connect(function (err) {
+      if (err) console.log(err)
+
+      var query = "select id,name from glpi_groups where entities_id = 26 order by name";
+
+      var lbs = ["Id","Nome"];
+
+       con.query(query, function (err, result, fields) {
+        if (err) {
+          console.log(err)
+        }
         var retorno = {labels:[],data:[],time:''};
         retorno.labels = lbs;
 

@@ -3,15 +3,29 @@
         <button class="navbar-toggler navbar-toggler-right" (click)="toggleSidebar()">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="javascript:void(0)">SICTD - Insights</a>
+        <a class="navbar-brand" href="javascript:void(0)">Insights</a>
         <div class="collapse navbar-collapse">
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-            </form>
+            <!-- <form class="form-inline my-2 my-lg-0"> -->
+                <!-- <input class="form-control mr-sm-2" type="text" placeholder="Search"> -->
+            <!-- </form> -->
+            <ul class="navbar-nav my-2 my-lg-0">
+                <li class="nav-item dropdown" ngbDropdown>
+                    <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                        {{grupoSelecionado.name}}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-left">
+                        <a href="javascript:void(0)" *ngFor="let gp of listGrupo.data; let index = index" class="dropdown-item" (click)="selecionarGrupo(gp)">{{gp.name}}</a>
+                        <!-- <a href="javascript:void(0)" class="dropdown-item">Incidente</a> -->
+                        <!-- <li class="dropdown-divider"></li> -->
+                        <!-- <a href="javascript:void(0)" class="dropdown-item">View All</a> -->
+                    </ul>
+                </li>
+            </ul>
             <ul class="navbar-nav ml-auto mt-2 mt-md-0">
                 <li class="nav-item">
-                    <a href="javascript:void(0)" class="nav-link mt-1" style="padding: 0.375rem 1rem !important; border-color: #999;" (click)="rltAndLtr()">RTL/LTR</a>
-                </li> &nbsp;
+                    <div class="navbar-brand">{{myDate.time | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+<!--                     <a href="javascript:void(0)" class="nav-link mt-1" style="padding: 0.375rem 1rem !important; border-color: #999;" (click)="rltAndLtr()">RTL/LTR</a>
+ -->                </li> &nbsp;
                 <!--<li class="nav-item dropdown" ngbDropdown>-->
                     <!-- <div class="dropdown"> -->
                     <!--<a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>

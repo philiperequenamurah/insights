@@ -11,6 +11,11 @@ export class LayoutComponent implements OnInit {
     constructor(public router: Router) { }
 
     ngOnInit() {
+
+    	if (!localStorage.getItem('glpiOptions')){
+    		let op = {requisicao:true,incidente:true,pendente:false, solucionado: false, nomeentidade: "", processando: true};
+    		localStorage.setItem('glpiOptions',JSON.stringify(op)) ;
+    	}
         if (this.router.url === '/') {
             this.router.navigate(['/start']);
         }
