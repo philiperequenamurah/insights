@@ -252,13 +252,13 @@ export class DashboardComponent implements OnInit {
             this.ping.criticalCss = 'card-' + this.defineButtonCritical(statusFinal);
             this.ping.time = new Date(data.data[0].time);
             this.ping.status = statusFinal;
-            if(this.defineButtonCritical(statusFinal) == 'danger'){
-                this.audioSirene.load();
-                this.audioSirene.play();
-                 setTimeout(() => {
-                     this.audioSirene.pause();
-                    }, 1000 * 5);
-            }
+            // if(this.defineButtonCritical(statusFinal) == 'danger'){
+            //     this.audioSirene.load();
+            //     this.audioSirene.play();
+            //      setTimeout(() => {
+            //          this.audioSirene.pause();
+            //         }, 1000 * 5);
+            // }
 
         });
     }
@@ -300,17 +300,17 @@ export class DashboardComponent implements OnInit {
     private defineLogsUrl(mq: any){
         var url = 'https://caixa.murah.info.tm/contexpress-server/logs.do?protocol=http&ip=' + mq.ip + '&porta=';
         if(mq.maq.endsWith('_1'))
-            url+='12280&t=50000';
+            url+='12280&context=contexpress-server&t=50000&contentType=text/plain';
         else if(mq.maq.endsWith('_2'))
-            url+='12380&t=50000';    
+            url+='12380&context=contexpress-server&t=50000&contentType=text/plain';    
         else if(mq.maq.endsWith('_3'))
-            url+='12480&t=50000';
+            url+='12480&context=contexpress-server&t=50000&contentType=text/plain';
         else if(mq.maq.endsWith('_4'))
-            url+='12830&t=50000';
+            url+='12830&context=contexpress-cca&t=50000&contentType=text/plain';
         else if(mq.maq.endsWith('_0'))
-            url+='12180&t=50000';
+            url+='12180&context=contexpress-cca&t=50000&contentType=text/plain';
         else if(mq.maq.endsWith('CETAD'))
-            url+='12680&t=50000';
+            url+='12680&context=contexpress-server&t=50000&contentType=text/plain';
         return url;
     }
 
