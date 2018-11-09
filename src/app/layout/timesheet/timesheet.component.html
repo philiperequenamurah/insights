@@ -1,0 +1,51 @@
+<div [@routerTransition]>
+ <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="card mb-12">
+                <div class="card-block table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let oo of optionsNotUsed; let index = index" (click)="addFilter(oo.key);" class="text-center">{{oo.label}}
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th *ngFor="let tt of filtro.orderOptions; let index = index" >
+                                <div class="filter-div">
+                                    <div (click)="removeFilter(tt.key)" class="filter-x">X</div>
+                                    <div ngbDropdown>
+                                        <div  class="filter-f" ngbDropdownToggle>
+                                            ?                                    
+                                        </div >
+                                        <ul class="dropdown-menu dropdown-menu-left">
+                                            <a href="javascript:void(0)"  class="dropdown-item" >LINK</a>
+                                            <!-- *ngFor="let gp of listGrupo.data; let index = index" (click)="selecionarGrupo(gp)" -->
+                                            <!-- <a href="javascript:void(0)" class="dropdown-item">Incidente</a> -->
+                                            <!-- <li class="dropdown-divider"></li> -->
+                                            <!-- <a href="javascript:void(0)" class="dropdown-item">View All</a> -->
+                                        </ul>
+                                    </div>
+                                    <div class="filter-t">{{tt.label}}</div>
+                                </div>
+                            </th>
+                            <th class="text-center">Total/h</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let dd of listResult; let index = index">
+                            <td *ngFor="let tt of filtro.orderOptions; let sindex = index" class="text-center"><span>{{dd[tt.key]}}</span>
+                            <span *ngIf="tt.key == 'date'">{{getDayOfWeek(dd[tt.key])}}</span>
+                        </td>
+                            <td class="text-center">{{dd['time'] / 60 / 60 | number:'1.0-2'}}h</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

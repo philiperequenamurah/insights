@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AudixpressComponent } from './audixpress.component';
-import { AudixpressRoutingModule } from './audixpress-routing.module';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { TimesheetComponent } from './timesheet.component';
+import { TimesheetRoutingModule } from './timesheet-routing.module';
 import { PageHeaderModule } from './../../shared';
 
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 
 import {GlpiService} from '../../service/glpi/glpi-service';  
-import {MantisService} from '../../service/mantis/mantis-service';  
+import {MantisService} from '../../service//mantis/mantis-service';  
+import {RunrunService} from '../../service/runrun/runrun-service';  
 
  declare var require: any;
 
@@ -25,17 +28,19 @@ import {MantisService} from '../../service/mantis/mantis-service';
 @NgModule({
     imports: [
         CommonModule,
-        AudixpressRoutingModule,
-        PageHeaderModule
+        TimesheetRoutingModule,
+        PageHeaderModule,
+        NgbDropdownModule.forRoot()
     ],
-    declarations: [AudixpressComponent],
+    declarations: [TimesheetComponent],
     providers: [  
     {
           provide: HighchartsStatic,
           useFactory: highchartsFactory
         },
         GlpiService,
-        MantisService
+        MantisService,
+        RunrunService
     ]
 })
-export class AudixpressModule { }
+export class TimesheetModule { }

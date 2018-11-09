@@ -13,6 +13,7 @@ const routes: Routes = [
             { path: 'tables', loadChildren: './tables/tables.module#TablesModule' },
             { path: 'chamados', loadChildren: './chamados/chamados.module#ChamadosModule' },
             { path: 'audixpress', loadChildren: './audixpress/audixpress.module#AudixpressModule' },
+            { path: 'timesheet', loadChildren: './timesheet/timesheet.module#TimesheetModule' },
             { path: 'forms', loadChildren: './form/form.module#FormModule' },
             { path: 'bs-element', loadChildren: './bs-element/bs-element.module#BsElementModule' },
             { path: 'grid', loadChildren: './grid/grid.module#GridModule' },

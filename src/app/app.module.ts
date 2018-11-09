@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
 import { GlpiService } from  './service/glpi/glpi-service';
+import { HttpClientModule } from '@angular/common/http';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: Http) {
 //     for development
@@ -25,6 +26,7 @@ export function HttpLoaderFactory(http: Http) {
         FormsModule,
         HttpModule,
         AppRoutingModule,
+        HttpClientModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
