@@ -8,12 +8,13 @@ import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class MantisService {  
-	private url: string = 'http://192.168.0.80:10201/';  	
+	private url: string = 'http://' + window.location.hostname + ':10204/';  	
+
 
     constructor(private http: Http) {}
 
 	getMantis() {  
-	    return this.getResponse('mantis');  
+	    return this.getResponse('status');  
 	} 
 
 	private getResponse(endPoint) {

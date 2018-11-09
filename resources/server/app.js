@@ -4,8 +4,8 @@
 
   var mantis = require('./mantis.js')
 
-  runrun.start();
+  runrun.start(10202);
 
-  glpi.start();
+  glpi.start(10203);
 
-  mantis.start();
+  mantis.start(10204);

@@ -8,20 +8,20 @@ import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class GlpiService {  
-	private url: string = 'http://192.168.0.80:10201/';  	
+	private url: string = 'http://' + window.location.hostname + ':10203/';  	
 
     constructor(private http: Http) {}
 
 	getGlpi(op: any) {  
-		return this.getResponse('glpi',op);
+		return this.getResponse('status',op);
 	} 
 
 	getPorCliente(op: any) {  
-		return this.getResponse('glpi/tickets',op);
+		return this.getResponse('tickets',op);
 	} 
 
 	getGrupos(op: any) {  
-		return this.getResponse('glpi/groups',op);
+		return this.getResponse('groups',op);
 	} 
 
 	private getResponse(endPoint, params) {

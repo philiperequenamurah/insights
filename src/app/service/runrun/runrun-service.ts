@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class RunrunService {  
-	private url: string = 'http://localhost:10202/';  	
+	private url: string = 'http://' + window.location.hostname + ':10202/';  	
 
     constructor(private http: Http) {}
 

@@ -28,7 +28,7 @@ var corsOptionsDelegate = function (req, callback) {
 }
  
 module.exports = {
-  start: function () {
+  start: function (porta) {
     app.get('/', cors(corsOptionsDelegate), function (req, res) {
       res.setHeader('Content-Type', 'application/json');
       res.write("Central de serviços do MANTIS");     
@@ -67,8 +67,10 @@ module.exports = {
         });
       });
     });
+
+    app.listen(porta); //the server object listens on port 8080
   }
 }
 
-app.listen(10204); //the server object listens on port 8080
+
 

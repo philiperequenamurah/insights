@@ -29,7 +29,7 @@ var corsOptionsDelegate = function (req, callback) {
  
   //create a server object:
 module.exports = {
-  start: function () {
+  start: function (porta) {
     app.get('/', cors(corsOptionsDelegate), function (req, res) {
       res.setHeader('Content-Type', 'application/json');
       res.write("Central de serviços do GLPI");     
@@ -67,12 +67,12 @@ module.exports = {
 
           var lbs = ["Cliente","Vencido", "Vincendo","A Vencer"];
 
-    console.log(query);
+    // console.log(query);
            con.query(query, function (err, result, fields) {
             if (err) {
               console.log(err)
             }
-    console.log(result);
+    // console.log(result);
             var retorno = {labels:[],data:[],time:''};
             retorno.labels = lbs;
 
@@ -176,6 +176,6 @@ module.exports = {
         });
       });
 
-      app.listen(10203);
+      app.listen(porta);
     }
 }
