@@ -196,6 +196,7 @@ module.exports = {
                 numeros.push(resultado[i]._id);
             }
             if(numeros.length <= 0 ){
+              res.write(JSON.stringify({}));
               res.sendStatus(200);
               return;
             }
