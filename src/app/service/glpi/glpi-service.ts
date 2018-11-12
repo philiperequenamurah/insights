@@ -13,7 +13,6 @@ export class GlpiService {
     constructor(private http: Http) {}
 
 	postPin(numero:any,pinned:any) { 
-	console.log(numero + " " + pinned);
 		return this.postResponse('pin',{"id": numero,"pin": pinned});
 	} 
 

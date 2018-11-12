@@ -197,7 +197,8 @@ module.exports = {
             }
             if(numeros.length <= 0 ){
               res.write(JSON.stringify({}));
-              res.sendStatus(200);
+              res.setHeader('Content-Type', 'application/json');
+              res.end();
               return;
             }
 
