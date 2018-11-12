@@ -55,7 +55,12 @@ module.exports = {
           var retorno = {}
           var con = mysql.createConnection(myConfig);
           con.connect(function (err) {
-            if (err) console.log(err)
+              if (err) {
+                console.log(err)
+                con.end();
+                res.sendStatus(500);
+              }
+
 
             var query = "select t.nomeentidade as name, sum(case when t.datavencimento < now() then 1 else 0 end) vencido,  sum(case when t.datavencimento between now() and date_add(now(), interval 5 day) then 1 else 0 end) vincendo, sum(case when t.datavencimento > date_add(now(), interval 5 day) or t.datavencimento is null then 1 else 0 end) avencer  from glpi.dashboardtickets t where";
 
@@ -146,6 +151,8 @@ module.exports = {
              con.query(query, function (err, result, fields) {
               if (err) {
                 console.log(err)
+                con.end();
+                res.sendStatus(500);
               }
 
               var retorno = {labels:[],data:[],time:''};
@@ -196,6 +203,8 @@ module.exports = {
                con.query(query, function (err, result, fields) {
                 if (err) {
                   console.log(err)
+                  con.end();
+                  res.sendStatus(500);
                 }
 
                 var retorno = {labels:[],data:[],time:''};
@@ -224,7 +233,12 @@ module.exports = {
           var retorno = {}
           var con = mysql.createConnection(myConfig);
           con.connect(function (err) {
-            if (err) console.log(err)
+              if (err) {
+                console.log(err)
+                con.end();
+                res.sendStatus(500);
+              }
+
 
             var query = "select id,name from glpi_groups where entities_id = 26 order by name";
 
@@ -233,7 +247,10 @@ module.exports = {
              con.query(query, function (err, result, fields) {
               if (err) {
                 console.log(err)
+                con.end();
+                res.sendStatus(500);
               }
+
               var retorno = {labels:[],data:[],time:''};
               retorno.labels = lbs;
 
@@ -250,6 +267,8 @@ module.exports = {
           });
         }catch (exception_var) {
           console.log(exception_var);
+          res.sendStatus(500);
+
         }
       });
 
@@ -269,6 +288,8 @@ module.exports = {
           });
         }catch (exception_var) {
           console.log(exception_var);
+          res.sendStatus(500);
+
         }
 
      });
@@ -284,6 +305,8 @@ module.exports = {
           });
         }catch (exception_var) {
           console.log(exception_var);
+          res.sendStatus(500);
+
         }
 
       });
@@ -298,6 +321,8 @@ module.exports = {
           });
         }catch (exception_var) {
           console.log(exception_var);
+          res.sendStatus(500);
+
         }
       });
       app.listen(porta);
