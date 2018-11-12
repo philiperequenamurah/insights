@@ -21,6 +21,7 @@ export class ChamadosComponent implements OnInit {
     public sortDefault = "Numero";
     public sortAsc = true;
     private opcoes: any;
+    private lastPinned: Array<any> = []
 
     constructor(private glpiService: GlpiService,private mantisService: MantisService,  private route: ActivatedRoute,
     private router: Router) { }
@@ -36,11 +37,13 @@ export class ChamadosComponent implements OnInit {
 
          this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
 
-         this.resetGlpi();
+         this.resetPinned();
+         
         // this.resetMantis();
         setInterval(() => {
 	       this.resetGlpi();
 	       //  this.resetMantis();
+           this.resetPinned();
         }, 1000 * 60);
         setInterval(() => {
            this.utcTimeStart();
@@ -48,11 +51,24 @@ export class ChamadosComponent implements OnInit {
 	}
 
     private resetGlpi(){
-        console.log(this.opcoes);
+        // console.log(this.opcoes);
         this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
         this.opcoes.nomeentidade = this.cliente;
         this.glpiService.getPorCliente(this.opcoes).subscribe(data => {
             this.montarData(this.chamados,data);
+        });
+    }
+
+    private resetPinned(){
+        // console.log(this.opcoes);
+        this.glpiService.getPin().subscribe(data => {
+            this.lastPinned.length = 0;
+            for (var i in data) {
+                this.lastPinned.push(data[i]);
+            }
+            // console.log("agora");
+            // console.log(data);
+            this.resetGlpi();
         });
     }
 
@@ -63,10 +79,24 @@ export class ChamadosComponent implements OnInit {
                 origem.labels.push(data.labels[i]);
             }
             for (var i in data.data) {
+                var vlr = data.data[i];
+                // console.log(vlr);
+                // console.log(vlr.Pinned + " " + this.isPinned(vlr.Numero));
+                vlr.Pinned = this.isPinned(vlr.Numero);
                 origem.data.push(data.data[i]);
             }
+            // console.log(this.lastPinned);
             origem.time = data.time
             this.ordenar(null);
+            // console.log(origem);
+    }
+
+    private isPinned(numero: any){
+            for (var i in this.lastPinned) {
+                if(this.lastPinned[i]._id == numero)
+                    return this.lastPinned[i].pin;
+            }
+            return false;
     }
 
     public utcTimeStart() {
@@ -121,5 +151,11 @@ export class ChamadosComponent implements OnInit {
                 else return 0;
             };
         })
+    }
+
+    public setPin(dd){
+        this.glpiService.postPin(dd.Numero,(dd.Pinned != true)).subscribe(data => {
+            this.resetPinned();
+        });
     }
 }

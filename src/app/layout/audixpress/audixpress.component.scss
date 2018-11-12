@@ -58,3 +58,13 @@ div.op {
 	background-color: #6ab3ff;
 	cursor: pointer;
 }
+
+.text-limit {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-height: 25px;
+    max-height: 25px;
+}

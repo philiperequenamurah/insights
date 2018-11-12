@@ -58,5 +58,25 @@
                 </div>
             </div>
         </div>
+        <div class="col col-xl-6 col-lg-6">
+            <div class="card mb-6">
+                <div class="card-block table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Pin</th>
+                                <th class="text-center click-order" *ngFor="let lb of pinned.labels; let index = index" (click)="ordenar(lb)">{{lb}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let dd of pinned.data; let index = index" class="link">
+                            <td class="text-center link-pin" (click)="unPin(dd['Numero'])"><i class="fas fa-thumbtack"></i></td>
+                            <td *ngFor="let vl of pinned.labels; let sindex = index" class="{{getCssPinned(sindex,dd)}}" (click)="openGLPI(dd)"><div class="{{sindex == 1 ? 'text-limit' : ''}}">{{formatar(vl,dd[vl])}}</div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

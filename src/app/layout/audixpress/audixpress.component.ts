@@ -5,6 +5,8 @@ import {GlpiService} from '../../service/glpi/glpi-service';
 import {EventEmitterService} from '../../service/emitter/event-emmiter-service';  
 import {MantisService} from '../../service/mantis/mantis-service';  
 import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+
 
 @Component({
     selector: 'app-audixpress',
@@ -17,6 +19,7 @@ export class AudixpressComponent implements OnInit {
     public lastTime = {time: new Date()};
     private sortBy = "label";
     public listClient: Array<any> = [];
+    public pinned: any = {labels: [],data: []};
 
     private opcoes = {requisicao:true,incidente:true,pendente:false, solucionado: false, processando: true, nomeentidade: ""};
 
@@ -27,8 +30,11 @@ export class AudixpressComponent implements OnInit {
         this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
         this.resetGlpi();
         this.resetMantis();
+        this.resetPinned();
+
         EventEmitterService.get('glpi').subscribe(data => this.resetGlpi());
         setInterval(() => {
+            this.resetPinned();
 	        this.resetGlpi();
 	        this.resetMantis();
         }, 1000 * 60);
@@ -43,6 +49,13 @@ export class AudixpressComponent implements OnInit {
         	this.montarData('glpi',data);
         });
     }
+
+    public resetPinned(){
+        this.glpiService.getPinned().subscribe(data => {
+            this.montarDataPinned(this.pinned,data);
+        });
+    }
+
     private getClient(label: any){
         var client = null;
 
@@ -58,6 +71,19 @@ export class AudixpressComponent implements OnInit {
             this.ordenar();
         }
         return client;
+    }
+
+    private montarDataPinned(origem: any, data: any){
+            origem.data.length = 0;
+            origem.labels.length = 0;
+            for (var i in data.labels) {
+                origem.labels.push(data.labels[i]);
+            }
+            for (var i in data.data) {
+                origem.data.push(data.data[i]);
+            }
+            origem.time = data.time
+            this.ordenarPinned(null);
     }
 
     private montarData(sistema: any, data: any){
@@ -143,5 +169,46 @@ export class AudixpressComponent implements OnInit {
             else return 0;
         })
     }
+    public formatar(label:any, value: any){
+        if(label == 'Criacao' || label == 'Vencimento'){
+            return moment(value).format('YYYY/MM/DD hh:mm');
+        }
+        return value;
+    }
 
+    public getCssPinned(index: any, obj: any){
+        if(index > 0)
+            return ;
+        var data = moment(obj['Vencimento']);
+        if(data.isBefore(new Date()))
+            return 'red';
+        if(data.clone().add(-7,'day').isBefore(new Date()))
+            return 'yellow';
+        return 'green';
+    }
+
+    public ordenarPinned(coluna){
+        // if(this.sortBy = coluna)
+        //     this.sortAsc = !this.sortAsc
+        // else
+        //     this.sortAsc = true;
+        // if(coluna)
+        //     this.sortBy = coluna;
+        // this.chamados.data.sort((a,b)=>{
+        //     if (a[this.sortBy] < b[this.sortBy]) return this.sortAsc ? -1 : 1;
+        //     else if (a[this.sortBy] > b[this.sortBy]) return this.sortAsc ? 1 : -1;
+        //     else {
+        //         if (a[this.sortDefault] < b[this.sortDefault]) return this.sortAsc ? -1 : 1;
+        //         else if (a[this.sortDefault] > b[this.sortDefault]) return this.sortAsc ? 1 : -1;
+        //         else return 0;
+        //     };
+        // })
+    }
+
+    public unPin(numero){
+        // console.log(numero);
+        this.glpiService.postPin(numero,false).subscribe(data => {
+            this.resetPinned();
+        });
+    }
 }

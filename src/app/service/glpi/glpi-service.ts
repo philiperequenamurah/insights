@@ -12,6 +12,19 @@ export class GlpiService {
 
     constructor(private http: Http) {}
 
+	postPin(numero:any,pinned:any) { 
+	console.log(numero + " " + pinned);
+		return this.postResponse('pin',{"id": numero,"pin": pinned});
+	} 
+
+	getPinned() {  
+		return this.getResponse('tickets/pin',{});
+	} 
+
+	getPin() {  
+		return this.getResponse('pin',{"pin": true});
+	} 
+
 	getGlpi(op: any) {  
 		return this.getResponse('status',op);
 	} 
@@ -38,5 +51,10 @@ export class GlpiService {
 		  return this.http.get(this.url + endPoint, new RequestOptions({ "search":search}))
       		.map(res => res.json());  
 	    }
+	}
+
+	private postResponse(endPoint, body) {
+	    return this.http.post(this.url + endPoint, body)
+	  		.map(res => res.json());  
 	}
 }  

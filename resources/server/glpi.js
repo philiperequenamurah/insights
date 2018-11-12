@@ -1,5 +1,6 @@
   const express = require('express')
   const app = express()
+  const mongo = require('./mongo.js')
 
   var cors = require('cors')
 
@@ -7,7 +8,8 @@
 
   var mysql = require('mysql')
 
-  
+  var bodyParser = require('body-parser');
+
   var MYUSER = 'root'
   var MYDATABASE = 'glpi'
   var MYHOST = '192.168.0.6'
@@ -23,13 +25,24 @@
 
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
-  corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response 
+  corsOptions = { origin: true,  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE","preflightContinue": false } // reflect (enable) the requested origin in the CORS response 
   callback(null, corsOptions) // callback expects two parameters: error and options 
 }
  
   //create a server object:
 module.exports = {
   start: function (porta) {
+
+    app.use(bodyParser.json()); // support json encoded bodies
+    app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies  
+
+    app.options("/*", function(req, res, next){
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+      res.send(200);
+    });
+
     app.get('/', cors(corsOptionsDelegate), function (req, res) {
       res.setHeader('Content-Type', 'application/json');
       res.write("Central de serviços do GLPI");     
@@ -37,145 +50,256 @@ module.exports = {
     });
 
       app.get('/status', cors(corsOptionsDelegate), function (req, res) {
-        var myClient;
-        var retorno = {}
-        var con = mysql.createConnection(myConfig);
-        con.connect(function (err) {
-          if (err) console.log(err)
+        try {
+          var myClient;
+          var retorno = {}
+          var con = mysql.createConnection(myConfig);
+          con.connect(function (err) {
+            if (err) console.log(err)
 
-          var query = "select t.nomeentidade as name, sum(case when t.datavencimento < now() then 1 else 0 end) vencido,  sum(case when t.datavencimento between now() and date_add(now(), interval 5 day) then 1 else 0 end) vincendo, sum(case when t.datavencimento > date_add(now(), interval 5 day) or t.datavencimento is null then 1 else 0 end) avencer  from glpi.dashboardtickets t where";
+            var query = "select t.nomeentidade as name, sum(case when t.datavencimento < now() then 1 else 0 end) vencido,  sum(case when t.datavencimento between now() and date_add(now(), interval 5 day) then 1 else 0 end) vincendo, sum(case when t.datavencimento > date_add(now(), interval 5 day) or t.datavencimento is null then 1 else 0 end) avencer  from glpi.dashboardtickets t where";
 
-          if(req.query.pendente != 'true')
-             query += " t.status <> 4 and ";
+            if(req.query.pendente != 'true')
+               query += " t.status <> 4 and ";
 
-          if(req.query.solucionado != 'true')
-             query += " t.status <> 5 and ";
+            if(req.query.solucionado != 'true')
+               query += " t.status <> 5 and ";
 
-          if(req.query.processando == 'false')
-             query += " t.status not in (1,2,3) and ";
+            if(req.query.processando == 'false')
+               query += " t.status not in (1,2,3) and ";
 
-          if(req.query.incidente == 'false')
-             query += " t.type <> 1 and ";
+            if(req.query.incidente == 'false')
+               query += " t.type <> 1 and ";
 
-          if(req.query.grupo)
-             query += " t.grupoatribuido like '%" + req.query.grupo + "%' and ";
+            if(req.query.grupo)
+               query += " t.grupoatribuido like '%" + req.query.grupo + "%' and ";
 
-          if(req.query.requisicao == 'false')
-             query += " t.type <> 2 and ";
-          
-          query += " t.status <> 6 group by t.nomeentidade order by t.nomeentidade"; 
+            if(req.query.requisicao == 'false')
+               query += " t.type <> 2 and ";
+            
+            query += " t.status <> 6 group by t.nomeentidade order by t.nomeentidade"; 
 
-          var lbs = ["Cliente","Vencido", "Vincendo","A Vencer"];
+            var lbs = ["Cliente","Vencido", "Vincendo","A Vencer"];
 
-    // console.log(query);
-           con.query(query, function (err, result, fields) {
-            if (err) {
-              console.log(err)
-            }
-    // console.log(result);
-            var retorno = {labels:[],data:[],time:''};
-            retorno.labels = lbs;
+      // console.log(query);
+             con.query(query, function (err, result, fields) {
+              if (err) {
+                console.log(err)
+              }
+      // console.log(result);
+              var retorno = {labels:[],data:[],time:''};
+              retorno.labels = lbs;
 
-            for (var i = 0; i < result.length; i++) {
-              var v = result[i];
-              retorno.data.push(v);
-            };
-            retorno.time = new Date();
-            con.end();
-            res.setHeader('Content-Type', 'application/json');
-            res.write(JSON.stringify(retorno));
-            res.end();
+              for (var i = 0; i < result.length; i++) {
+                var v = result[i];
+                retorno.data.push(v);
+              };
+              retorno.time = new Date();
+              con.end();
+              res.setHeader('Content-Type', 'application/json');
+              res.write(JSON.stringify(retorno));
+              res.end();
+            });
           });
-        });
+
+        }catch (exception_var) {
+          console.log(exception_var);
+        }
       });
 
       app.get('/tickets', cors(corsOptionsDelegate), function (req, res) {
-        var myClient;
-        var retorno = {}
-        var con = mysql.createConnection(myConfig);
-        con.connect(function (err) {
-          if (err) console.log(err)
+        try{
+          var myClient;
+          var retorno = {}
+          var con = mysql.createConnection(myConfig);
+          con.connect(function (err) {
+            if (err) console.log(err)
 
-          var query = "SELECT numero as Numero,titulo as Titulo,typelabel as Tipo,datacriacao as Criacao,datavencimento as Vencimento ,nomeentidade as Cliente,status_name as Status,locations_name as Localizacao,grupoatribuido as Grupo,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
-          
-          if(req.query.pendente != 'true')
-             query += " t.status <> 4 and ";
+            var query = "SELECT numero as Numero,titulo as Titulo,typelabel as Tipo,datacriacao as Criacao,datavencimento as Vencimento ,nomeentidade as Cliente,status_name as Status,locations_name as Localizacao,grupoatribuido as Grupo,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
+            
+            if(req.query.pendente != 'true')
+               query += " t.status <> 4 and ";
 
-          if(req.query.solucionado != 'true')
-             query += " t.status <> 5 and ";
+            if(req.query.solucionado != 'true')
+               query += " t.status <> 5 and ";
 
-          if(req.query.processando == 'false')
-             query += " t.status not in (1,2,3) and ";
+            if(req.query.processando == 'false')
+               query += " t.status not in (1,2,3) and ";
 
-          if(req.query.incidente == 'false')
-             query += " t.type <> 1 and ";
+            if(req.query.incidente == 'false')
+               query += " t.type <> 1 and ";
 
-          if(req.query.requisicao == 'false')
-             query += " t.type <> 2 and ";
+            if(req.query.requisicao == 'false')
+               query += " t.type <> 2 and ";
 
-          if(req.query.grupo)
-             query += " t.grupoatribuido like '%" + req.query.grupo + "%' and ";
+            if(req.query.grupo)
+               query += " t.grupoatribuido like '%" + req.query.grupo + "%' and ";
 
-          if(req.query.nomeentidade)
-              query += " nomeentidade like '" + req.query.nomeentidade + "' and ";
+            if(req.query.nomeentidade)
+                query += " nomeentidade like '" + req.query.nomeentidade + "' and ";
 
-          query += " 1 = 1 order by numero ";
-          
-          var lbs = ["Numero","Titulo","Tipo", 
-          "Criacao", "Vencimento","Cliente","Status","Localizacao","Grupo", "Atribuido"];
+            query += " 1 = 1 order by numero ";
+            
+            var lbs = ["Numero","Titulo","Tipo", 
+            "Criacao", "Vencimento","Cliente","Status","Localizacao","Grupo", "Atribuido"];
 
-           con.query(query, function (err, result, fields) {
-            if (err) {
-              console.log(err)
-            }
+             con.query(query, function (err, result, fields) {
+              if (err) {
+                console.log(err)
+              }
 
-            var retorno = {labels:[],data:[],time:''};
-            retorno.labels = lbs;
+              var retorno = {labels:[],data:[],time:''};
+              retorno.labels = lbs;
 
-            for (var i = 0; i < result.length; i++) {
-              var v = result[i];
-              retorno.data.push(v);
-            };
-            retorno.time = new Date();
-            con.end();
-            res.setHeader('Content-Type', 'application/json');
-            res.write(JSON.stringify(retorno));
-            res.end();
+              for (var i = 0; i < result.length; i++) {
+                var v = result[i];
+                retorno.data.push(v);
+              };
+              retorno.time = new Date();
+              con.end();
+              res.setHeader('Content-Type', 'application/json');
+              res.write(JSON.stringify(retorno));
+              res.end();
+            });
           });
-        });
+        }catch (exception_var) {
+          console.log(exception_var);
+        }
+
+      });
+
+      app.get('/tickets/pin', cors(corsOptionsDelegate), function (req, res) {
+        try{
+          var myClient;
+          var retorno = {}
+          mongo.listChamado({pin:true},function(resultado){
+            var numeros = [];
+            console.log(resultado);
+            for (var i = 0; i < resultado.length; i++) {
+              if(typeof resultado[i]._id == 'number')
+                numeros.push(resultado[i]._id);
+            }
+            var con = mysql.createConnection(myConfig);
+            con.connect(function (err) {
+              if (err) console.log(err)
+
+              var query = "SELECT numero as Numero,titulo as Titulo,datavencimento as Vencimento ,nomeentidade as Cliente,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
+              
+
+              query += " t.numero in ("+numeros.toString()+") and ";
+
+              query += " 1 = 1 order by numero ";
+              
+              var lbs = ["Numero","Titulo",
+               "Vencimento","Cliente","Atribuido"];
+
+               con.query(query, function (err, result, fields) {
+                if (err) {
+                  console.log(err)
+                }
+
+                var retorno = {labels:[],data:[],time:''};
+                retorno.labels = lbs;
+
+                for (var i = 0; i < result.length; i++) {
+                  var v = result[i];
+                  retorno.data.push(v);
+                };
+                retorno.time = new Date();
+                con.end();
+                res.setHeader('Content-Type', 'application/json');
+                res.write(JSON.stringify(retorno));
+                res.end();
+              });
+            });
+          });
+        }catch (exception_var) {
+          console.log(exception_var);
+        }
       });
 
      app.get('/groups', cors(corsOptionsDelegate), function (req, res) {
-        var myClient;
-        var retorno = {}
-        var con = mysql.createConnection(myConfig);
-        con.connect(function (err) {
-          if (err) console.log(err)
+        try{
+          var myClient;
+          var retorno = {}
+          var con = mysql.createConnection(myConfig);
+          con.connect(function (err) {
+            if (err) console.log(err)
 
-          var query = "select id,name from glpi_groups where entities_id = 26 order by name";
+            var query = "select id,name from glpi_groups where entities_id = 26 order by name";
 
-          var lbs = ["Id","Nome"];
+            var lbs = ["Id","Nome"];
 
-           con.query(query, function (err, result, fields) {
-            if (err) {
-              console.log(err)
-            }
-            var retorno = {labels:[],data:[],time:''};
-            retorno.labels = lbs;
+             con.query(query, function (err, result, fields) {
+              if (err) {
+                console.log(err)
+              }
+              var retorno = {labels:[],data:[],time:''};
+              retorno.labels = lbs;
 
-            for (var i = 0; i < result.length; i++) {
-              var v = result[i];
-              retorno.data.push(v);
-            };
-            retorno.time = new Date();
-            con.end();
-            res.setHeader('Content-Type', 'application/json');
-            res.write(JSON.stringify(retorno));
-            res.end();
+              for (var i = 0; i < result.length; i++) {
+                var v = result[i];
+                retorno.data.push(v);
+              };
+              retorno.time = new Date();
+              con.end();
+              res.setHeader('Content-Type', 'application/json');
+              res.write(JSON.stringify(retorno));
+              res.end();
+            });
           });
-        });
+        }catch (exception_var) {
+          console.log(exception_var);
+        }
       });
 
+     app.get('/pin', cors(corsOptionsDelegate), function(req,res){
+        try{
+          console.log(' pin.');
+          var filtro = {};
+
+          if(req.query.pin == 'true' || req.query.pin == 'false')
+            filtro.pin =  (req.query.pin == 'true');
+
+          mongo.listChamado(filtro,function(resultado){
+            console.log('callbaaack list');
+            res.setHeader('Content-Type', 'application/json');
+            res.write(JSON.stringify(resultado));
+            res.end();
+          });
+        }catch (exception_var) {
+          console.log(exception_var);
+        }
+
+     });
+
+      app.post('/pin', cors(corsOptionsDelegate), function(req, res) {
+        try{
+          var glpi_id = req.body.id;
+          var glpi_pin = req.body.pin;
+          mongo.pinChamado({id:glpi_id,pin:glpi_pin},function(resultado){
+            res.setHeader('Content-Type', 'application/json');
+            res.write(JSON.stringify(resultado));
+            res.end();
+          });
+        }catch (exception_var) {
+          console.log(exception_var);
+        }
+
+      });
+
+      app.delete('/pin', cors(corsOptionsDelegate), function(req, res) {
+        try{
+          var collectionName = req.query.collectionName;
+          mongo.cleanCollection(collectionName,function(resultado){
+            res.setHeader('Content-Type', 'application/json');
+            res.write(JSON.stringify(resultado));
+            res.end();
+          });
+        }catch (exception_var) {
+          console.log(exception_var);
+        }
+      });
       app.listen(porta);
     }
 }

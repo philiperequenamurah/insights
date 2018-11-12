@@ -27,8 +27,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let dd of chamados.data; let index = index" (click)="openGLPI(dd)" class="link">
-                            <td *ngFor="let vl of chamados.labels; let sindex = index" class="{{getCssGLPI(sindex,dd)}}">{{formatar(vl,dd[vl])}}</td>
+                        <tr *ngFor="let dd of chamados.data; let index = index" class="link">
+                            <td class="text-center link-pin" (click)="setPin(dd)">
+                                <i class="fas fa-thumbtack {{dd.Pinned != true ? 'fa-inactive' : ''}}"></i>
+                            </td>    
+                            <td *ngFor="let vl of chamados.labels; let sindex = index" (click)="openGLPI(dd)" class="{{getCssGLPI(sindex,dd)}}">{{formatar(vl,dd[vl])}}</td>
                         </tr>
                         </tbody>
                     </table>
