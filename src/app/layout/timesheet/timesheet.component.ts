@@ -28,7 +28,7 @@ export class TimesheetComponent implements OnInit {
 
     public optionsNotUsed : Array<any> = [];
 
-    private filtro = { dateStart : null, dateEnd: null, orderOptions : this.getClone(this.options)};
+    public filtro = { dateStart : null, dateEnd: null, orderOptions : this.getClone(this.options)};
 
     private requestQuery = {
         period_start:"2018-10-01",
