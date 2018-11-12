@@ -55,11 +55,12 @@ module.exports = {
           var retorno = {}
           var con = mysql.createConnection(myConfig);
           con.connect(function (err) {
-              if (err) {
-                console.log(err)
-                con.end();
-                res.sendStatus(500);
-              }
+            if (err) {
+              console.log(err)
+              con.end();
+              res.sendStatus(500);
+              return;
+            }
 
 
             var query = "select t.nomeentidade as name, sum(case when t.datavencimento < now() then 1 else 0 end) vencido,  sum(case when t.datavencimento between now() and date_add(now(), interval 5 day) then 1 else 0 end) vincendo, sum(case when t.datavencimento > date_add(now(), interval 5 day) or t.datavencimento is null then 1 else 0 end) avencer  from glpi.dashboardtickets t where";
@@ -90,8 +91,10 @@ module.exports = {
              con.query(query, function (err, result, fields) {
               if (err) {
                 console.log(err)
-              }
-      // console.log(result);
+                con.end();
+                res.sendStatus(500);
+                return;
+              }      // console.log(result);
               var retorno = {labels:[],data:[],time:''};
               retorno.labels = lbs;
 
@@ -118,7 +121,12 @@ module.exports = {
           var retorno = {}
           var con = mysql.createConnection(myConfig);
           con.connect(function (err) {
-            if (err) console.log(err)
+            if (err) {
+             console.log(err)
+              con.end();
+              res.sendStatus(500);
+              return;
+            }
 
             var query = "SELECT numero as Numero,titulo as Titulo,typelabel as Tipo,datacriacao as Criacao,datavencimento as Vencimento ,nomeentidade as Cliente,status_name as Status,locations_name as Localizacao,grupoatribuido as Grupo,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
             
@@ -153,6 +161,7 @@ module.exports = {
                 console.log(err)
                 con.end();
                 res.sendStatus(500);
+                return;
               }
 
               var retorno = {labels:[],data:[],time:''};
@@ -181,14 +190,19 @@ module.exports = {
           var retorno = {}
           mongo.listChamado({pin:true},function(resultado){
             var numeros = [];
-            console.log(resultado);
+            // console.log(resultado);
             for (var i = 0; i < resultado.length; i++) {
               if(typeof resultado[i]._id == 'number')
                 numeros.push(resultado[i]._id);
             }
             var con = mysql.createConnection(myConfig);
             con.connect(function (err) {
-              if (err) console.log(err)
+              if (err) {
+                console.log(err)
+                con.end();
+                res.sendStatus(500);
+                return;
+              }
 
               var query = "SELECT numero as Numero,titulo as Titulo,datavencimento as Vencimento ,nomeentidade as Cliente,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
               
@@ -205,6 +219,7 @@ module.exports = {
                   console.log(err)
                   con.end();
                   res.sendStatus(500);
+                  return;
                 }
 
                 var retorno = {labels:[],data:[],time:''};
@@ -237,6 +252,7 @@ module.exports = {
                 console.log(err)
                 con.end();
                 res.sendStatus(500);
+                return;
               }
 
 
@@ -249,6 +265,7 @@ module.exports = {
                 console.log(err)
                 con.end();
                 res.sendStatus(500);
+                return;
               }
 
               var retorno = {labels:[],data:[],time:''};
@@ -289,7 +306,7 @@ module.exports = {
         }catch (exception_var) {
           console.log(exception_var);
           res.sendStatus(500);
-
+          return;
         }
 
      });
@@ -306,7 +323,7 @@ module.exports = {
         }catch (exception_var) {
           console.log(exception_var);
           res.sendStatus(500);
-
+          return;
         }
 
       });
@@ -318,11 +335,12 @@ module.exports = {
             res.setHeader('Content-Type', 'application/json');
             res.write(JSON.stringify(resultado));
             res.end();
+            return;
           });
         }catch (exception_var) {
           console.log(exception_var);
           res.sendStatus(500);
-
+          return;
         }
       });
       app.listen(porta);
