@@ -211,4 +211,9 @@ export class AudixpressComponent implements OnInit {
             this.resetPinned();
         });
     }
+
+    public openGLPI(obj:any){
+        window.open('http://suporte.murah.com.br/front/ticket.form.php?id=' + obj.Numero, '_blank');
+    }
+
 }

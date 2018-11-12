@@ -196,8 +196,8 @@ module.exports = {
                 numeros.push(resultado[i]._id);
             }
             if(numeros.length <= 0 ){
-              res.write(JSON.stringify({}));
               res.setHeader('Content-Type', 'application/json');
+              res.write(JSON.stringify({}));
               res.end();
               return;
             }
