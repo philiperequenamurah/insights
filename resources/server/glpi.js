@@ -195,6 +195,11 @@ module.exports = {
               if(typeof resultado[i]._id == 'number')
                 numeros.push(resultado[i]._id);
             }
+            if(numeros.length <= 0 ){
+              res.sendStatus(200);
+              return;
+            }
+
             var con = mysql.createConnection(myConfig);
             con.connect(function (err) {
               if (err) {
