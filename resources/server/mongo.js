@@ -12,11 +12,9 @@ const collsName = 'chamados';
 
 // Use connect method to connect to the Server
 const chamada = function (funcao, retorno){
-	// console.log('chamada');
 	var client = new MongoClient(url);
 	client.connect(function(err) {
 	  assert.equal(null, err);
-	  // console.log("Connected successfully to server");
 
 	  const db = client.db(dbName);
 
@@ -28,46 +26,89 @@ const chamada = function (funcao, retorno){
 	});
 }
 
+const  orderChamado = function (id, data, callback){
+  	var findDocumentsPreUpdate = function(db, callback) {
+	  // Get the documents collection
+	  	const collection = db.collection(collsName);
+	  // Find some documents
+		collection.find({pin:true}).toArray(function(err, docs) {
+			var retorno = docs;
+	        let sortBy = 'ordem';
+	        let sortAsc = true;
+	        let sortDefault = '_id';
+
+	        retorno.sort(function (a,b){
+	            if (a[sortBy] < b[sortBy]) return sortAsc ? -1 : 1;
+	            else if (a[sortBy] > b[sortBy]) return sortAsc ? 1 : -1;
+	            else {
+	                if (a[sortDefault] < b[sortDefault]) return sortAsc ? -1 : 1;
+	                else if (a[sortDefault] > b[sortDefault]) return sortAsc ? 1 : -1;
+	                else return 0;
+	            };
+	        })
+			for (var i = 0; i < retorno.length; i++) {
+				if(retorno[i]._id == id){
+					var node = retorno[i];
+					retorno.splice(i,1)
+					var ordemFinal = data.ordem;
+					if(i > ordemFinal) 
+						retorno.splice(ordemFinal -1,0,node);
+					else 
+						retorno.splice(ordemFinal,0,node);
+					break;
+
+				}
+			}
+			
+			for (var i = 0; i < retorno.length; i++) {
+   			    const collection = db.collection(collsName);
+			    collection.updateOne({ _id : retorno[i]._id }
+			      , { $set: {ordem: i}}, function(err, result) {
+			    });  
+			}
+		    callback({ok:"ok"});
+		});
+	};
+
+	chamada(findDocumentsPreUpdate,callback);
+ };
+
 module.exports = {
-  pinChamado: function (data, retorno){
-  	// console.log('entrou ' +data.id + ' - ' + data.pin);
-	// primeiro update se tiver zero chama insert
+  pinChamado: function (id, data, retorno){
   	var update = function(db, callback) {
   // Get the documents collection
 	  const collection = db.collection(collsName);
 	  // Update document where a is 2, set b equal to 1
-	  collection.updateOne({ _id : data.id }
-	    , { $set: { pin : data.pin } }, function(err, result) {
-	    // assert.equal(err, null);
+	  collection.updateOne({ _id : id }
+	    , { $set: data }, function(err, result) {
+
 	    if(result.result.n < 1){
+	    	data._id = id;
 		  collection.insertMany([
-		    {_id: data.id, pin: data.pin}
+		    data
 		  ], function(err, result) {
-		    assert.equal(err, null);
-		    // console.log("Inserido");
-		    callback(result.result);
+		    if(typeof data.ordem == 'number')
+		    	orderChamado(id,data,callback)
+		    else
+			    callback(result.result);
 		  });
 	    }else{
-	    	callback(result.result);
+		    if(typeof data.ordem == 'number')
+		    	orderChamado(id,data,callback)
+		    else
+			    callback(result.result);
 	    }
 	  });  
 	};
 
 	chamada(update,retorno);
   },
-
   listChamado: function (filtro, retorno) {
-  	// console.log('listChamado');
   	var findDocuments = function(db, callback) {
 	  // Get the documents collection
 	  const collection = db.collection(collsName);
 	  // Find some documents
 	  collection.find(filtro).toArray(function(err, docs) {
-	  	console.log('entrou');
-	  	console.log(err);
-	    assert.equal(err, null);
-	    // console.log("Found the following records");
-	    // console.log(docs)
 	    callback(docs);
 	  });
 	};
@@ -80,17 +121,11 @@ module.exports = {
 		  const collection = db.collection(collectionName);
 		  // Find some documents
 		  collection.remove({})
-		  // . toArray(function(err, result) {
-		  // 	console.log('entrou');
-		  	console.log('apagou tudo');
-		    // assert.equal(err, null);
-		    // console.log("Found the following records");
-		    // console.log(docs)
 		    callback({});
-		  // });
 		};
 
 		chamada(removeAll,retorno);		
 	}
 
 }
+

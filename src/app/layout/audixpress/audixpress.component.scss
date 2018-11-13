@@ -68,3 +68,11 @@ div.op {
     line-height: 25px;
     max-height: 25px;
 }
+
+.plance-holder-dnd,.dndDragging{
+	background-color: purple;
+}
+
+.dndDraggingSource{
+	display: none;
+}

@@ -12,8 +12,13 @@ export class GlpiService {
 
     constructor(private http: Http) {}
 
-	postPin(numero:any,pinned:any) { 
-		return this.postResponse('pin',{"id": numero,"pin": pinned});
+	postPin(numero:any,pinned:any, order:any) { 
+		let data = {id : numero};
+		if(pinned != null)
+			data['pin'] = pinned;
+		if(order != null)
+			data['ordem'] = order;
+		return this.postResponse('pin',data);
 	} 
 
 	getPinned() {  

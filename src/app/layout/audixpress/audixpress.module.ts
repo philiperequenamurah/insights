@@ -10,6 +10,8 @@ import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import {GlpiService} from '../../service/glpi/glpi-service';  
 import {MantisService} from '../../service/mantis/mantis-service';  
 
+import { DndModule } from 'ngx-drag-drop';
+
  declare var require: any;
 
     export function highchartsFactory() {
@@ -26,7 +28,8 @@ import {MantisService} from '../../service/mantis/mantis-service';
     imports: [
         CommonModule,
         AudixpressRoutingModule,
-        PageHeaderModule
+        PageHeaderModule,
+        DndModule
     ],
     declarations: [AudixpressComponent],
     providers: [  

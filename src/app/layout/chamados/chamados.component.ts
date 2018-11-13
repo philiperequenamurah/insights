@@ -154,7 +154,7 @@ export class ChamadosComponent implements OnInit {
     }
 
     public setPin(dd){
-        this.glpiService.postPin(dd.Numero,(dd.Pinned != true)).subscribe(data => {
+        this.glpiService.postPin(dd.Numero,(dd.Pinned != true),null).subscribe(data => {
             this.resetPinned();
         });
     }

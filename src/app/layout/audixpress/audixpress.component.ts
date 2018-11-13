@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 
+import { DndDropEvent } from 'ngx-drag-drop';
 
 import {GlpiService} from '../../service/glpi/glpi-service';  
 import {EventEmitterService} from '../../service/emitter/event-emmiter-service';  
@@ -21,8 +22,17 @@ export class AudixpressComponent implements OnInit {
     private sortBy = "label";
     public listClient: Array<any> = [];
     public pinned: any = {labels: [],data: []};
-    private dragger;
     private opcoes = {requisicao:true,incidente:true,pendente:false, solucionado: false, processando: true, nomeentidade: ""};
+    public placerObj = {data: {}};
+
+ draggable = {
+    // note that data is handled with JSON.stringify/JSON.parse
+    // only set simple data or POJO's as methods will be lost 
+    data: this.pinned.data,
+    effectAllowed: "all",
+    disable: false,
+    handle: false
+  };
 
     constructor(private glpiService: GlpiService, private mantisService: MantisService,  private route: ActivatedRoute,
     private router: Router) { }
@@ -85,7 +95,7 @@ export class AudixpressComponent implements OnInit {
                 origem.data.push(data.data[i]);
             }
             origem.time = data.time
-            this.ordenarPinned(null);
+            this.ordenarPinned();
     }
 
     private montarData(sistema: any, data: any){
@@ -189,27 +199,24 @@ export class AudixpressComponent implements OnInit {
         return 'green';
     }
 
-    public ordenarPinned(coluna){
-        // if(this.sortBy = coluna)
-        //     this.sortAsc = !this.sortAsc
-        // else
-        //     this.sortAsc = true;
-        // if(coluna)
-        //     this.sortBy = coluna;
-        // this.chamados.data.sort((a,b)=>{
-        //     if (a[this.sortBy] < b[this.sortBy]) return this.sortAsc ? -1 : 1;
-        //     else if (a[this.sortBy] > b[this.sortBy]) return this.sortAsc ? 1 : -1;
-        //     else {
-        //         if (a[this.sortDefault] < b[this.sortDefault]) return this.sortAsc ? -1 : 1;
-        //         else if (a[this.sortDefault] > b[this.sortDefault]) return this.sortAsc ? 1 : -1;
-        //         else return 0;
-        //     };
-        // })
+    public ordenarPinned(){
+        let sortBy = 'ordem';
+        let sortAsc = true;
+        let sortDefault = 'Numero';
+
+        this.pinned.data.sort((a,b)=>{
+            if (a[sortBy] < b[sortBy]) return sortAsc ? -1 : 1;
+            else if (a[sortBy] > b[sortBy]) return sortAsc ? 1 : -1;
+            else {
+                if (a[sortDefault] < b[sortDefault]) return sortAsc ? -1 : 1;
+                else if (a[sortDefault] > b[sortDefault]) return sortAsc ? 1 : -1;
+                else return 0;
+            };
+        })
     }
 
     public unPin(numero){
-        // console.log(numero);
-        this.glpiService.postPin(numero,false).subscribe(data => {
+        this.glpiService.postPin(numero,false,null).subscribe(data => {
             this.resetPinned();
         });
     }
@@ -217,5 +224,19 @@ export class AudixpressComponent implements OnInit {
     public openGLPI(obj:any){
         window.open('http://suporte.murah.com.br/front/ticket.form.php?id=' + obj.Numero, '_blank');
     }
+
+// DROP AQUI  
+  onDrop(event:DndDropEvent) {
+      var ordem = event.index;
+      if(ordem > event.data.ordem)
+          ordem--;
+        this.glpiService.postPin(event.data.Numero,null,ordem).subscribe(data => {
+            this.resetPinned();
+        });
+  }
+
+  onDragStart(data) {
+      this.placerObj.data = data;
+  }
 
 }

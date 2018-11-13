@@ -87,14 +87,13 @@ module.exports = {
 
             var lbs = ["Cliente","Vencido", "Vincendo","A Vencer"];
 
-      // console.log(query);
              con.query(query, function (err, result, fields) {
               if (err) {
                 console.log(err)
                 con.end();
                 res.sendStatus(500);
                 return;
-              }      // console.log(result);
+              }
               var retorno = {labels:[],data:[],time:''};
               retorno.labels = lbs;
 
@@ -190,10 +189,12 @@ module.exports = {
           var retorno = {}
           mongo.listChamado({pin:true},function(resultado){
             var numeros = [];
-            // console.log(resultado);
+            var nOrdem = {};
             for (var i = 0; i < resultado.length; i++) {
-              if(typeof resultado[i]._id == 'number')
+              if(typeof resultado[i]._id == 'number'){
                 numeros.push(resultado[i]._id);
+                nOrdem[resultado[i]._id] = (resultado[i]).ordem;
+              }
             }
             if(numeros.length <= 0 ){
               res.setHeader('Content-Type', 'application/json');
@@ -231,11 +232,11 @@ module.exports = {
 
                 var retorno = {labels:[],data:[],time:''};
                 retorno.labels = lbs;
-
                 for (var i = 0; i < result.length; i++) {
                   var v = result[i];
+                  v.ordem = nOrdem[v['Numero']];
                   retorno.data.push(v);
-                };
+                }
                 retorno.time = new Date();
                 con.end();
                 res.setHeader('Content-Type', 'application/json');
@@ -298,14 +299,12 @@ module.exports = {
 
      app.get('/pin', cors(corsOptionsDelegate), function(req,res){
         try{
-          console.log(' pin.');
           var filtro = {};
 
           if(req.query.pin == 'true' || req.query.pin == 'false')
             filtro.pin =  (req.query.pin == 'true');
 
           mongo.listChamado(filtro,function(resultado){
-            console.log('callbaaack list');
             res.setHeader('Content-Type', 'application/json');
             res.write(JSON.stringify(resultado));
             res.end();
@@ -320,9 +319,17 @@ module.exports = {
 
       app.post('/pin', cors(corsOptionsDelegate), function(req, res) {
         try{
-          var glpi_id = req.body.id;
-          var glpi_pin = req.body.pin;
-          mongo.pinChamado({id:glpi_id,pin:glpi_pin},function(resultado){
+          var save = {};
+                      
+          var id = req.body.id;
+
+          if(req.body.pin == true || req.body.pin == false)
+            save.pin = req.body.pin;
+          
+          if(typeof req.body.ordem == 'number')
+            save.ordem = req.body.ordem;
+
+          mongo.pinChamado(id, save,function(resultado){
             res.setHeader('Content-Type', 'application/json');
             res.write(JSON.stringify(resultado));
             res.end();
