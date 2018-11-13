@@ -14,6 +14,8 @@ export class HeaderComponent implements OnInit {
     public myDate = {time: new Date()};
     public listGrupo = {data : []};
     public grupoSelecionado = {id: 0, name:'Filtrar Grupo'};
+    public timerApresetacao = {status:false, timer:null};
+
     constructor(private translate: TranslateService, public router: Router, private glpiService: GlpiService) {
         this.router.events.subscribe((val) => {
             if (val instanceof NavigationEnd && window.innerWidth <= 992) {
@@ -32,7 +34,9 @@ export class HeaderComponent implements OnInit {
                 this.listGrupo.data.push(data.data[i]);
             }
         });
+
     }
+
 
     public utcTimeStart() {
         this.myDate.time = new Date();
@@ -79,4 +83,21 @@ export class HeaderComponent implements OnInit {
 
         EventEmitterService.get('glpi').emit('emitĺerolero');
     }
+
+    public modoApresentacao(){
+     if(this.timerApresetacao.status){
+         this.timerApresetacao.status = false; 
+         clearInterval(this.timerApresetacao.timer);
+     }
+     else{
+          this.timerApresetacao.status = true;
+
+            this.timerApresetacao.timer = setInterval(() => {
+            if (this.router.url === '/sictd') 
+                this.router.navigate(['/audixpress']);           //  this.resetMantis();
+            else
+                this.router.navigate(['/sictd']);           //  this.resetMantis();
+            }, 1000 * 5);   
+        }
+     }        
 }
