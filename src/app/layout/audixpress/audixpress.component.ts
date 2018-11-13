@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 
+
 import {GlpiService} from '../../service/glpi/glpi-service';  
 import {EventEmitterService} from '../../service/emitter/event-emmiter-service';  
 import {MantisService} from '../../service/mantis/mantis-service';  
@@ -20,7 +21,7 @@ export class AudixpressComponent implements OnInit {
     private sortBy = "label";
     public listClient: Array<any> = [];
     public pinned: any = {labels: [],data: []};
-
+    private dragger;
     private opcoes = {requisicao:true,incidente:true,pendente:false, solucionado: false, processando: true, nomeentidade: ""};
 
     constructor(private glpiService: GlpiService, private mantisService: MantisService,  private route: ActivatedRoute,
@@ -41,6 +42,7 @@ export class AudixpressComponent implements OnInit {
         setInterval(() => {
            this.utcTimeStart();
         },1000);
+
 	}
 
     public resetGlpi(){
