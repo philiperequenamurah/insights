@@ -40,14 +40,14 @@ export class AudixpressComponent implements OnInit {
     ngOnInit() { 
         this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
         this.resetGlpi();
-        this.resetMantis();
+        // this.resetMantis();
         this.resetPinned();
 
         EventEmitterService.get('glpi').subscribe(data => this.resetGlpi());
         setInterval(() => {
             this.resetPinned();
 	        this.resetGlpi();
-	        this.resetMantis();
+	        // this.resetMantis();
         }, 1000 * 60);
         setInterval(() => {
            this.utcTimeStart();
@@ -58,6 +58,7 @@ export class AudixpressComponent implements OnInit {
     public resetGlpi(){
         this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
         this.glpiService.getGlpi(this.opcoes).subscribe(data => {
+            data.data = data.data.filter(dd => ((dd.avencer + dd.vincendo + dd.vencido) > 0));
         	this.montarData('glpi',data);
         });
     }
@@ -99,7 +100,7 @@ export class AudixpressComponent implements OnInit {
     }
 
     private montarData(sistema: any, data: any){
-
+        this.listClient.length = 0;
         this.listClient.forEach(function(value: any){
             for (var j in value[sistema]) {
                 value[sistema][j]=0;
@@ -115,7 +116,6 @@ export class AudixpressComponent implements OnInit {
             }
         }
         this.lastTime.time = data.time;
-
     }
 
     public resetMantis(){
