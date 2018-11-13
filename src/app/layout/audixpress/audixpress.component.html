@@ -25,7 +25,7 @@
                         <tr>
                             <th class="text-center"></th>
                             <th class="text-center link" colspan="4" (click)="chamados('')">GLPI({{contarTotalGlpi()}})</th>
-                            <th class="text-center" colspan="6">MANTIS({{contarTotalMantis()}})</th>
+                            <!-- <th class="text-center" colspan="6">MANTIS({{contarTotalMantis()}})</th> -->
                         </tr>
                         <tr>
                             <th class="text-center">Cliente</th>
@@ -33,12 +33,12 @@
                             <th class="text-center">Vincendo</th>
                             <th class="text-center">A Vencer</th>
                             <th class="text-center">Total</th>
-                            <th class="text-center">Crash</th>
+     <!--                        <th class="text-center">Crash</th>
                             <th class="text-center">Block</th>
                             <th class="text-center">Major</th>
                             <th class="text-center">Others</th>
                             <th class="text-center">Total</th>
-                        </tr>
+      -->                   </tr>
                         </thead>
                         <tbody>
                         <tr *ngFor="let dd of listClient; let index = index" class="link" (click)="chamados(dd.label)">
@@ -47,12 +47,12 @@
                             <td class="{{dd.glpi.vincendo == 0? '' : 'yellow'}} text-center">{{dd.glpi.vincendo}}</td>
                             <td class="{{dd.glpi.avencer == 0? '' : 'green'}} text-center">{{dd.glpi.avencer}}</td>
                             <td class="text-center">{{dd.glpi.avencer + dd.glpi.vincendo + dd.glpi.vencido}}</td>
-                            <td class="text-center">{{dd.mantis.crash}}</td>
+<!--                             <td class="text-center">{{dd.mantis.crash}}</td>
                             <td class="text-center" >{{dd.mantis.block}}</td>
                             <td class="text-center">{{dd.mantis.major}}</td>
                             <td class="text-center">{{dd.mantis.other}}</td>
                             <td class="text-center">{{countMantis(dd.mantis)}}</td>
-                        </tr>
+ -->                        </tr>
                         </tbody>
                     </table>
                 </div>
