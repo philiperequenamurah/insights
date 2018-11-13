@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --ec true",
-    "build": "ng build --prod",
-    "gitbuild": "ng build --prod --base /start-angular/SB-Admin-BS4-Angular-4/master/dist/",
+    "build": "ng build",
+    "gitbuild": "ng build --base /start-angular/SB-Admin-BS4-Angular-4/master/dist/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "^5.2.11",
     "@angular/platform-server": "^5.2.11",
     "@angular/router": "^5.2.11",
-    "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.26",
+    "@ng-bootstrap/ng-bootstrap": "^1.1.2",
     "@ngx-translate/core": "^9.0.0",
     "@ngx-translate/http-loader": "^2.0.0",
     "angular2-highcharts": "^0.5.5",
