@@ -230,8 +230,8 @@ export class AudixpressComponent implements OnInit {
 // DROP AQUI  
   onDrop(event:DndDropEvent) {
       var ordem = event.index;
-      if(ordem > event.data.ordem)
-          ordem--;
+      // if(event.data.ordem == null || ordem > event.data.ordem)
+      //     ordem--;
         this.glpiService.postPin(event.data.Numero,null,ordem).subscribe(data => {
             this.resetPinned();
         });

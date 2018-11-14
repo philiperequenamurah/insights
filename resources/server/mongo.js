@@ -40,18 +40,19 @@ const  orderChamado = function (id, data, callback){
 	        retorno.sort(function (a,b){
 	            if (a[sortBy] < b[sortBy]) return sortAsc ? -1 : 1;
 	            else if (a[sortBy] > b[sortBy]) return sortAsc ? 1 : -1;
-	            else {
-	                if (a[sortDefault] < b[sortDefault]) return sortAsc ? -1 : 1;
-	                else if (a[sortDefault] > b[sortDefault]) return sortAsc ? 1 : -1;
+	            // else {
+	            //     if (a[sortDefault] < b[sortDefault]) return sortAsc ? -1 : 1;
+	            //     else if (a[sortDefault] > b[sortDefault]) return sortAsc ? 1 : -1;
 	                else return 0;
-	            };
+	            // };
 	        })
 			for (var i = 0; i < retorno.length; i++) {
 				if(retorno[i]._id == id){
 					var node = retorno[i];
 					retorno.splice(i,1)
 					var ordemFinal = data.ordem;
-					if(i > ordemFinal) 
+					console.log(i + " " + ordemFinal);
+					if(i <= ordemFinal && ordemFinal != 0) 
 						retorno.splice(ordemFinal -1,0,node);
 					else 
 						retorno.splice(ordemFinal,0,node);
