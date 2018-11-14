@@ -45,10 +45,12 @@ export class AudixpressComponent implements OnInit {
 
         EventEmitterService.get('glpi').subscribe(data => this.resetGlpi());
         setInterval(() => {
-            this.resetPinned();
-	        this.resetGlpi();
-	        // this.resetMantis();
+            this.resetGlpi();
+            // this.resetMantis();
         }, 1000 * 60);
+        setInterval(() => {
+            this.resetPinned();
+        }, 1000 * 10);
         setInterval(() => {
            this.utcTimeStart();
         },1000);

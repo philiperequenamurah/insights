@@ -212,7 +212,7 @@ module.exports = {
                 return;
               }
 
-              var query = "SELECT numero as Numero,titulo as Titulo,datavencimento as Vencimento ,nomeentidade as Cliente,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
+              var query = "SELECT numero as Numero,titulo as Titulo,datavencimento as Vencimento ,nomeentidade as Cliente,grupoatribuido as Grupo,attr_user as Atribuido FROM glpi.dashboardtickets as t where "; 
               
 
               query += " t.numero in ("+numeros.toString()+") and ";
@@ -220,7 +220,7 @@ module.exports = {
               query += " 1 = 1 order by numero ";
               
               var lbs = ["Numero","Titulo",
-               "Vencimento","Cliente","Atribuido"];
+               "Vencimento","Cliente","Grupo","Atribuido"];
 
                con.query(query, function (err, result, fields) {
                 if (err) {
