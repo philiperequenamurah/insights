@@ -100,7 +100,7 @@ export class HeaderComponent implements OnInit {
                 this.router.navigate(['/audixpress']);           //  this.resetMantis();
             else
                 this.router.navigate(['/sictd']);           //  this.resetMantis();
-            }, 60000 * 5);   
+            }, 1000 * 60);   
         }
      }        
 }
