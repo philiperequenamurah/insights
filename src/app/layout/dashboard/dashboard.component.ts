@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
+import { interval } from 'rxjs/observable/interval';
 
 import {DashboardService} from '../../service/dashboard-service';  
 
@@ -13,6 +14,15 @@ import {DashboardService} from '../../service/dashboard-service';
 export class DashboardComponent implements OnInit {
     public myDate = {time: new Date()};
     public audioSirene = new Audio();
+
+    private intervalMinute = interval(60000).subscribe(val => {          
+        this.resetGBarra();
+          this.resetTimeLine();
+          this.resetPing();
+          this.resetTotalTransmissao();
+          this.resetDesempenho();
+        });
+
     public totalTransmissao = {time: new Date(),totalLote : 0,totalImagem: 0};
     public alerts: Array<any> = [];
     public ping: any = {data: []};
@@ -182,17 +192,22 @@ export class DashboardComponent implements OnInit {
         this.resetPing();
         this.resetTotalTransmissao();
         this.resetDesempenho();
-        setInterval(() => {
-          this.resetGBarra();
-          this.resetTimeLine();
-          this.resetPing();
-          this.resetTotalTransmissao();
-          this.resetDesempenho();
-        }, 1000 * 60);
-        setInterval(() => {
-           this.utcTimeStart();
-        },1000);
+        // setInterval(() => {
+        //   this.resetGBarra();
+        //   this.resetTimeLine();
+        //   this.resetPing();
+        //   this.resetTotalTransmissao();
+        //   this.resetDesempenho();
+        // }, 1000 * 60);
+        // setInterval(() => {
+        //    this.utcTimeStart();
+        // },1000);
     }
+
+    ngOnDestroy() {
+        this.intervalMinute.unsubscribe();
+    }
+
 
     public resetGBarra(){
         this.dashboardService.getGBarra().subscribe(data => {

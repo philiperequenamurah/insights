@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 
+import { interval } from 'rxjs/observable/interval';
+
 import { DndDropEvent } from 'ngx-drag-drop';
 
 import {GlpiService} from '../../service/glpi/glpi-service';  
@@ -25,14 +27,18 @@ export class AudixpressComponent implements OnInit {
     private opcoes = {requisicao:true,incidente:true,pendente:false, solucionado: false, processando: true, nomeentidade: ""};
     public placerObj = {data: {}};
 
- draggable = {
-    // note that data is handled with JSON.stringify/JSON.parse
-    // only set simple data or POJO's as methods will be lost 
-    data: this.pinned.data,
-    effectAllowed: "all",
-    disable: false,
-    handle: false
-  };
+    private intervalMinute = interval(60000).subscribe(val => this.resetGlpi());
+    private interval10Second = interval(10000).subscribe(val => this.resetPinned());
+    // private subscribe = source.subscribe();
+
+     draggable = {
+        // note that data is handled with JSON.stringify/JSON.parse
+        // only set simple data or POJO's as methods will be lost 
+        data: this.pinned.data,
+        effectAllowed: "all",
+        disable: false,
+        handle: false
+      };
 
     constructor(private glpiService: GlpiService, private mantisService: MantisService,  private route: ActivatedRoute,
     private router: Router) { }
@@ -44,19 +50,14 @@ export class AudixpressComponent implements OnInit {
         this.resetPinned();
 
         EventEmitterService.get('glpi').subscribe(data => this.resetGlpi());
-        setInterval(() => {
-            this.resetGlpi();
-            // this.resetMantis();
-        }, 1000 * 60);
-        setInterval(() => {
-            this.resetPinned();
-        }, 1000 * 10);
-        setInterval(() => {
-           this.utcTimeStart();
-        },1000);
 
 	}
 
+    ngOnDestroy() {
+        this.intervalMinute.unsubscribe();
+        this.interval10Second.unsubscribe();
+    }
+ 
     public resetGlpi(){
         this.opcoes = JSON.parse(localStorage.getItem('glpiOptions'));
         this.glpiService.getGlpi(this.opcoes).subscribe(data => {

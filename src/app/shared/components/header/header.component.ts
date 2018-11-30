@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { GlpiService } from '../../../service/glpi/glpi-service';  
 import {EventEmitterService} from '../../../service/emitter/event-emmiter-service';  
+import { interval } from 'rxjs/observable/interval';
 
 @Component({
     selector: 'app-header',
@@ -15,6 +16,7 @@ export class HeaderComponent implements OnInit {
     public listGrupo = {data : []};
     public grupoSelecionado = {id: 0, name:'Filtrar Grupo'};
     public timerApresetacao = {status:false, timer:null};
+    private utcTimer;
 
     constructor(private translate: TranslateService, public router: Router, private glpiService: GlpiService) {
         this.router.events.subscribe((val) => {
@@ -43,10 +45,11 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        setInterval(() => {
-           this.utcTimeStart();
-        },1000);
+        this.utcTimer = interval(1000).subscribe(val => this.utcTimeStart());
+    }
 
+    ngOnDestroy() {
+        this.utcTimer.unsubscribe();
     }
 
     toggleSidebar() {
@@ -97,7 +100,7 @@ export class HeaderComponent implements OnInit {
                 this.router.navigate(['/audixpress']);           //  this.resetMantis();
             else
                 this.router.navigate(['/sictd']);           //  this.resetMantis();
-            }, 1000 * 60);   
+            }, 60000 * 5);   
         }
      }        
 }
