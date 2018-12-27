@@ -313,20 +313,20 @@ export class DashboardComponent implements OnInit {
     }
 
     private defineLogsUrl(mq: any){
-        var url = 'https://caixa.murah.info.tm/contexpress-server/logs.do?protocol=http&ip=' + mq.ip + '&porta=';
+        var url = 'https://caixa.murah.info.tm/contexpress-server/proxy.do?a=tail.do?protocol=http&ip=' + mq.ip + '&port=';
         if(mq.maq.endsWith('_1'))
-            url+='12280&context=contexpress-server&t=50000&contentType=text/plain';
+            url+='12280&context=contexpress-server';
         else if(mq.maq.endsWith('_2'))
-            url+='12380&context=contexpress-server&t=50000&contentType=text/plain';    
+            url+='12380&context=contexpress-server';    
         else if(mq.maq.endsWith('_3'))
-            url+='12480&context=contexpress-server&t=50000&contentType=text/plain';
+            url+='12480&context=contexpress-server';
         else if(mq.maq.endsWith('_4'))
-            url+='12830&context=contexpress-cca&t=50000&contentType=text/plain';
+            url+='12830&context=contexpress-cca';
         else if(mq.maq.endsWith('_0'))
-            url+='12180&context=contexpress-cca&t=50000&contentType=text/plain';
+            url+='12180&context=contexpress-cca';
         else if(mq.maq.endsWith('CETAD'))
-            url+='12680&context=contexpress-server&t=50000&contentType=text/plain';
-        return url;
+            url+='12680&context=contexpress-server';
+        return url + '&t=50000&contentType=text/plain';
     }
 
     public redirectLog(url: any){

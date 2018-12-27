@@ -6,11 +6,15 @@
 
   var mongo = require('./mongo.js')
 
+  var metrica = require('./metrica.js')
+
   runrun.start(10202);
 
   glpi.start(10203);
 
   mantis.start(10204);
+
+  metrica.start(10205);
 
 	// mongo.pinChamado({id:13784,pin:true},function(res){
 	// 	console.log('callbaaack');
