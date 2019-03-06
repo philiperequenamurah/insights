@@ -10,8 +10,8 @@
 
 // Set the headers
 var headers = {
-      "App-Key":"b6848dfc62449107867a3c0eda6dac7e",
-      "User-Token":"d2b57EWw1EC3hTqVA0aa",
+      "App-Key":"app-key-here",
+      "User-Token":"token-here",
       "Content-Type": "application/json"
 }
 
